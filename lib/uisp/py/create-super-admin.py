@@ -6,7 +6,7 @@ import string
 import random
 import re
 parser = argparse.ArgumentParser()
-parser.add_argument('-u','--username', help='UISP username of Super Admin to create')
+parser.add_argument('-u','--username', help='Username of UISP Super Admin to create')
 args = parser.parse_args()
 letters = string.ascii_lowercase
 password = ''.join(random.choice(letters) for i in range(8))
