@@ -86,8 +86,8 @@ class Server():
         print("Username: " + args.username)
         print("Password: " + password)
 
-if args.email is not None and args.password is not None and args.username is not None:
+if args.email is not None and args.username is not None:
     unifi_video_server = Server('localhost')
     unifi_video_server.create_super_admin(args.username, args.email)
 else:
-    print "Error: Missing arguments. --username, and --email are required."
+    print("Error: Missing arguments. --username, and --email are required.")
