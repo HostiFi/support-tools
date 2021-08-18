@@ -1,4 +1,6 @@
+echo "Username of UISP Super Admin to delete: "
+read USERNAME
 docker exec -it unms-postgres psql -U unms
-delete from nms_user_view where username='sshaikh';
+delete from nms_user_view where username='$USERNAME';
 \q
-echo "Deleted sshaikhSuper Admin"
+echo "Deleted UISP Super Admin for $USERNAME"
