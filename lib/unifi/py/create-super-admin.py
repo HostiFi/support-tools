@@ -12,7 +12,7 @@ parser.add_argument('-e', '--email', help='UniFi email to create')
 args = parser.parse_args()
 
 randchoice = SystemRandom().choice
-password = ''.join(random.choice(letters) for i in range(8))
+password = ''.join(random.choice(string.ascii_letters) for i in range(8))
 
 def sha512_crypt(password, salt=None, rounds=None):
     if salt is None:
