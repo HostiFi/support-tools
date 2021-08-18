@@ -10,7 +10,7 @@ parser.add_argument('-u','--username', help='UniFi username of Super Admin to de
 args = parser.parse_args()
 
 if args.username is not None or args.email is not None:
-    is_email_or_domain == None
+    is_email == None
     if "@" in args.username:
         is_email = True
     else:
