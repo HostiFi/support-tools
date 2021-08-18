@@ -1,0 +1,2 @@
+wget https://raw.githubusercontent.com/HostiFi/mongodb-prune/master/mongodb_prune.js -O mongodb_prune.js
+crontab -l | { cat; echo "0 * * * * /usr/bin/mongo --port 27117 < /root/mongodb_prune.js"; } | crontab -

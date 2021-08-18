@@ -1,0 +1,2 @@
+wget https://raw.githubusercontent.com/HostiFi/mongo-delete-unifi-video-super-admin/master/mongo-delete-unifi-video-super-admin.py -O /root/mongo-delete-unifi-video-super-admin.py
+/usr/bin/python /root/mongo-delete-unifi-video-super-admin.py -u safwan

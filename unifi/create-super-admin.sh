@@ -1,0 +1,2 @@
+wget https://raw.githubusercontent.com/HostiFi/mongo-create-unifi-super-admin/master/mongo-create-unifi-super-admin.py -O mongo-create-unifi-super-admin.py
+python mongo-create-unifi-super-admin.py -u support -p 12e2fdwef32sa! -e support2@hostifi.com
