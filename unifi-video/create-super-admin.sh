@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "Username of UniFi Super Admin to create: "
 read USERNAME
 echo "Email address of UniFi Super Admin to create: "

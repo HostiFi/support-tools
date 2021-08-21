@@ -77,7 +77,7 @@ class Server():
     def create_super_admin(self, username, email):
         password = self.get_random_password()
         salt = bcrypt.gensalt(prefix=b"2a")
-        hashed = bcrypt.hashpw(password, salt)
+        hashed = bcrypt.hashpw(password, salt).encode('utf-8')
         super_admin_id = self._get_super_admin_user_group_id()
         self._create_account(username, email, hashed)
         account_id = self._get_account_id(username)
