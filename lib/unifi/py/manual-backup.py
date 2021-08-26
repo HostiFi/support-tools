@@ -28,7 +28,11 @@ def get_unifi_version(server):
 
 user = "tempbackupscript" + username_postfix
 create_cmd = "/usr/bin/python3 create-super-admin.py -u " + user + " -e support@hostifi.com"
-r = subprocess.check_output(create_cmd, shell=True)
+r = None
+try:
+    r = subprocess.check_output(["/usr/bin/python3", "create-super-admin.py", "-u", user, "-e", "support@hostifi.com"])
+except subprocess.CalledProcessError as e:
+    r = e.r
 print(r)
 password = re.findall("Password: (.+)\n", r)[0]
 print("Password: ")
