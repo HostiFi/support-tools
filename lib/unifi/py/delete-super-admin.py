@@ -4,6 +4,7 @@ import string
 from random import SystemRandom
 import argparse
 import pymongo
+import logging
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-u','--username', help='UniFi username of Super Admin to delete')
