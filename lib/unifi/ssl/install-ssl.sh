@@ -31,7 +31,7 @@ echo "Getting cert"
 certbot --nginx --email $EMAIL --agree-tos --no-eff-email --expand $DOMAINSTR --no-redirect --quiet --force-renewal
 
 echo "Importing cert to UniFi"
-/bin/bash /root/unifi-lets-encrypt-ssl-importer.sh -d ${DOMAINS[0]}
+/bin/bash import-ssl.sh -d ${DOMAINS[0]}
 
 echo "Creating certbot cron"
 crontab -l > /root/certbotcron
