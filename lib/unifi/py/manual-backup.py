@@ -34,7 +34,7 @@ try:
 except subprocess.CalledProcessError as e:
     r = e.r
 print(r)
-password = re.findall("Password: (.+)\n", r)[0]
+password = re.findall("Password: (.+)\n", r)[0].decode('ascii')
 print("Password: ")
 print(password[0])
 unifi_server = UniFi(hostname, user, password)
