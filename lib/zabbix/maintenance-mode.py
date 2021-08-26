@@ -24,7 +24,7 @@ if hostid[0] in existing_hostids:
 	logging.info("Maintenance IDs:")
 	logging.info(maintenance_ids)
 	for maintenanceid in maintenance_ids:
-		print("Removing " + hostid[0] + " from " + maintenanceid)
+		logging.info("Removing " + hostid[0] + " from " + maintenanceid)
 		zabbix.remove_hostids_from_maintenance_mode(maintenanceid, hostid)
 		zabbix.delete_maintenance_period(maintenanceid)
 	print("Maintenance mode disabled")

@@ -1,5 +1,4 @@
 #!/bin/bash
-echo $HOSTNAME
 IFS='.' read -r SERVER string <<< "$HOSTNAME"
 a=".hostifi.com"
 SERVER+=$a
