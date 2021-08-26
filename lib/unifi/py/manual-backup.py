@@ -8,6 +8,7 @@ import subprocess
 import re
 import random
 import socket
+from random import SystemRandom
 
 r = socket.gethostname()
 hostname = r.split('.')[0] + ".hostifi.com"
