@@ -1,13 +1,12 @@
 import zabbix
 import config
 import logging
-import argparse
+import socket
 
 # logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-parser = argparse.ArgumentParser()
-parser.add_argument('-s','--server', help='Name of server to toggle maintenance mode in Zabbix for')
-args = parser.parse_args()
+r = socket.gethostname()
+hostname = r.split('.')[0] + ".hostifi.com"
 
 zabbix = zabbix.Zabbix()
 hostid = [zabbix.get_hostid_from_hostname("m03397.hostifi.com")]
@@ -30,7 +29,7 @@ if hostid[0] in existing_hostids:
 	print("Maintenance mode disabled")
 else:
 	logging.info("Placing server in maintenance period on Zabbix...")
-	maintenanceid = zabbix.create_maintenance_period(args.server)
+	maintenanceid = zabbix.create_maintenance_period(hostname)
 	zabbix.put_hostids_into_maintenance_mode(maintenanceid, hostid)
 	logging.info("Server is in maintenance mode on Zabbix now")
 	print("Maintenance mode enabled")
