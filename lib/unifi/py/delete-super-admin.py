@@ -16,12 +16,12 @@ if args.username is not None or args.email is not None:
     else:
         is_email = False
     if is_email == False:
-        print("Deleting UniFi Super Admin by username")
-        print("Connecting to MongoDB...")
+        logging.info("Deleting UniFi Super Admin by username")
+        logging.info("Connecting to MongoDB...")
         site_ids = []
         client = pymongo.MongoClient("mongodb://127.0.0.1:27117/ace")
         mdb = client.ace
-        print("Finding Admin ID...")
+        logging.info("Finding Admin ID...")
         db_dump = mdb.site.find()
         admin_list = mdb.admin.find()
         for admin in admin_list:
@@ -30,27 +30,27 @@ if args.username is not None or args.email is not None:
                     admin_id = str(admin["_id"])
             except:
                 continue
-        print("Deleting Admin...")
+        logging.info("Deleting Admin...")
         mdb.admin.remove({'name': args.username})
         for site in db_dump:
             site_id = str(site["_id"])
             site_ids.append(site_id)
-        print("Removing privileges from all sites...")
+        logging.info("Removing privileges from all sites...")
         for site_id in site_ids:
             mdb.privilege.remove({"admin_id" : admin_id, "site_id" : site_id})
-        print("Deleted the account for: ")
-        print(args.username)
+        logging.info("Deleted the account for: ")
+        logging.info(args.username)
 
     else:
         print("Error: Missing argument. --username is required.")
 
     if is_email == True:
-        print("Deleting UniFi Super Admin by email")
-        print("Connecting to MongoDB...")
+        logging.info("Deleting UniFi Super Admin by email")
+        logging.info("Connecting to MongoDB...")
         site_ids = []
         client = pymongo.MongoClient("mongodb://127.0.0.1:27117/ace")
         mdb = client.ace
-        print("Finding Admin ID...")
+        logging.info("Finding Admin ID...")
         db_dump = mdb.site.find()
         admin_list = mdb.admin.find()
         for admin in admin_list:
@@ -60,16 +60,16 @@ if args.username is not None or args.email is not None:
                     admin_name = admin["name"]
             except:
                 continue
-        print("Deleting Admin...")
+        logging.info("Deleting Admin...")
         mdb.admin.remove({'name': admin_name})
         for site in db_dump:
             site_id = str(site["_id"])
             site_ids.append(site_id)
-        print("Removing privileges from all sites...")
+        logging.info("Removing privileges from all sites...")
         for site_id in site_ids:
             mdb.privilege.remove({"admin_id" : admin_id, "site_id" : site_id})
-        print("Deleted the account for username: ")
-        print(admin_name)
+        logging.info("Deleted the account for username: ")
+        logging.info(admin_name)
 
 else:
     print("Error: Missing argument. --email is required.")
