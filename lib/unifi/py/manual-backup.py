@@ -43,7 +43,7 @@ unifi_version = get_unifi_version(hostname)
 r = unifi_server.create_manual_backup()
 backup_dl_link = "https://" + hostname + ":8443" + r
 today = datetime.date.today()
-path_to_backup = "/usr/lib/unifi/data/backup/manual_" + unifi_version + "_" + today.strftime("%Y%m%d") + "_" + str(int(time.time()) + ".unf")
+path_to_backup = "/usr/lib/unifi/data/backup/manual_" + unifi_version + "_" + today.strftime("%Y%m%d") + "_" + str(int(time.time())) + ".unf"
 os.system("wget -O " + path_to_backup + " " + backup_dl_link)
 unifi_server.logout()
 os.system("/usr/bin/python3 delete-super-admin.py -u " + user)
