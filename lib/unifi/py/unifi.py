@@ -35,9 +35,9 @@ class UniFi(object):
 
     def download_backup(self, storage_path, link):
         logging.info("Downloading backup")
-        r = self.s.get(url=link, verfiy=self.verify_ssl, timeout=120)
+        r = self.s.get(url=link, verify=self.verify_ssl, timeout=120)
         open(storage_path, 'wb').write(r.content)
-        
+
     def create_manual_backup(self):
         logging.info("Running cmd")
         params = {"cmd": 'backup'}
