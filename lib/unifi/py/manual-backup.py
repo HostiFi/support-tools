@@ -44,7 +44,7 @@ r = unifi_server.create_manual_backup()
 backup_dl_link = "https://" + hostname + ":8443" + r
 today = datetime.date.today()
 path_to_backup = "/usr/lib/unifi/data/backup/manual_" + unifi_version + "_" + today.strftime("%Y%m%d") + "_" + str(int(time.time())) + ".unf"
-unifi_server.download_backup(path_to_backup_url, backup_dl_link)
+unifi_server.download_backup(path_to_backup, backup_dl_link)
 unifi_server.logout()
 os.system("/usr/bin/python3 delete-super-admin.py -u " + user)
 backup_size_in_bytes = os.stat(path_to_backup).st_size
