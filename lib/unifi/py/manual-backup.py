@@ -36,12 +36,12 @@ except subprocess.CalledProcessError as e:
 print(r)
 password = re.findall("Password: (.+)\n", r.decode('ascii'))[0]
 print("Password: ")
-print(password[0])
+print(password)
 unifi_server = UniFi(hostname, user, password)
 unifi_server.login()
 unifi_version = get_unifi_version(hostname)
 r = unifi_server.create_manual_backup()
-backup_dl_link = "https://" + args.server + ":8443" + r
+backup_dl_link = "https://" + hostname + ":8443" + r
 today = datetime.date.today()
 path_to_backup = "/usr/lib/unifi/data/backup/manual_" + unifi_version + "_" + today.strftime("%Y%m%d") + "_" + str(int(time.time()) + ".unf")
 os.system("wget -O " + path_to_backup + " " + backup_dl_link)
