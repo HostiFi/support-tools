@@ -27,7 +27,7 @@ def get_unifi_version(server):
     return r2['meta']['server_version']
 
 user = "tempbackupscript" + username_postfix
-create_cmd = "create-super-admin.py -u " + user + " -e support@hostifi.com"
+create_cmd = "/usr/bin/python3 create-super-admin.py -u " + user + " -e support@hostifi.com"
 r = subprocess.check_output(create_cmd, shell=True)
 print(r)
 password = re.findall("Password: (.+)\n", r)[0]
@@ -42,7 +42,7 @@ today = datetime.date.today()
 path_to_backup = "/usr/lib/unifi/data/backup/manual_" + unifi_version + "_" + today.strftime("%Y%m%d") + "_" + str(int(time.time()) + ".unf")
 os.system("wget -O " + path_to_backup + " " + backup_dl_link)
 unifi_server.logout()
-os.system("delete-super-admin.py -u " + user)
+os.system("/usr/bin/python3 delete-super-admin.py -u " + user)
 backup_size_in_bytes = os.stat(path_to_backup).st_size
 print("Manual backup stored at: " + path_to_backup)
 print("Backup size: " + human_readable(backup_size_in_bytes))
