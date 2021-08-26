@@ -3,7 +3,7 @@ import config
 import logging
 import argparse
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-s','--server', help='Name of server to toggle maintenance mode in Zabbix for')
