@@ -9,4 +9,4 @@ do
   DOMAINSTR+=$stringprefix$DOMAIN$stringpostfix
 done
 
-/bin/bash ../lib/unifi/ssl/install-ssl.sh $DOMAINSTR -e support@hostifi.com
+/bin/bash /root/support-tools/lib/unifi/ssl/install-ssl.sh $DOMAINSTR -e support@hostifi.com

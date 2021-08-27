@@ -30,7 +30,6 @@ def get_unifi_version(server):
     return r2['meta']['server_version']
 
 user = "tempbackupscript" + username_postfix
-create_cmd = "/usr/bin/python3 create-super-admin.py -u " + user + " -e support@hostifi.com"
 r = None
 try:
     r = subprocess.check_output(["/usr/bin/python3", "/root/support-tools/lib/unifi/py/create-super-admin.py", "-u", user, "-e", "support@hostifi.com"])
