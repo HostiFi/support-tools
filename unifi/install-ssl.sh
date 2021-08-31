@@ -8,5 +8,6 @@ do
   stringpostfix=" "
   DOMAINSTR+=$stringprefix$DOMAIN$stringpostfix
 done
-
-/bin/bash /root/support-tools/lib/unifi/ssl/install-ssl.sh $DOMAINSTR -e support@hostifi.com
+parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+cd "$parent_path"
+/bin/bash ../lib/unifi/ssl/install-ssl.sh $DOMAINSTR -e support@hostifi.com

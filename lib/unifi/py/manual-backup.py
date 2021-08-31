@@ -11,6 +11,9 @@ import socket
 from random import SystemRandom
 import string
 import warnings
+import os
+
+dir_path = os.path.dirname(os.path.abspath(__file__))
 
 warnings.filterwarnings('ignore', message='Unverified HTTPS request')
 
@@ -32,7 +35,7 @@ def get_unifi_version(server):
 user = "tempbackupscript" + username_postfix
 r = None
 try:
-    r = subprocess.check_output(["/usr/bin/python3", "/root/support-tools/lib/unifi/py/create-super-admin.py", "-u", user, "-e", "support@hostifi.com"])
+    r = subprocess.check_output(["/usr/bin/python3", os.path.join(dir_path, 'create-super-admin.py'), "-u", user, "-e", "support@hostifi.com"])
 except subprocess.CalledProcessError as e:
     r = e.r
 password = re.findall("Password: (.+)\n", r.decode('ascii'))[0]
@@ -45,7 +48,7 @@ today = datetime.date.today()
 path_to_backup = "/usr/lib/unifi/data/backup/manual_" + unifi_version + "_" + today.strftime("%Y%m%d") + "_" + str(int(time.time())) + ".unf"
 unifi_server.download_backup(path_to_backup, backup_dl_link)
 unifi_server.logout()
-os.system("/usr/bin/python3 /root/support-tools/lib/unifi/py/delete-super-admin.py -u " + user)
+os.system("/usr/bin/python3 " + dir_path + "/delete-super-admin.py -u " + user)
 backup_size_in_bytes = os.stat(path_to_backup).st_size
 print("Manual backup stored at: " + path_to_backup)
 print("Backup size: " + human_readable(backup_size_in_bytes))

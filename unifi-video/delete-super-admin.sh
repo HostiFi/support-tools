@@ -1,4 +1,6 @@
 #!/bin/bash
 echo "Username of UniFi Video Super Admin to delete: "
 read USERNAME
-/usr/bin/python3 /root/support-tools/lib/unifi-video/py/delete-super-admin.py -u $USERNAME
+parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+cd "$parent_path"
+/usr/bin/python3 ..lib/unifi-video/py/delete-super-admin.py -u $USERNAME
