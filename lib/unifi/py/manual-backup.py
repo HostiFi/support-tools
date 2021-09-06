@@ -55,4 +55,5 @@ try:
     print("Backup size: " + human_readable(backup_size_in_bytes))
 except:
     # Delete the admin account if anything fails
+    print("Error: backup failed!")
     os.system("/usr/bin/python3 " + dir_path + "/delete-super-admin.py -u " + user)
