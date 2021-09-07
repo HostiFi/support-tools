@@ -26,16 +26,16 @@ def sha512_crypt(password, salt=None, rounds=None):
     return crypt.crypt(password, prefix + salt)
 
 if args.email is not None and password is not None and args.username is not None:
-    print("Creating UniFi Super Admin")
-    print("Connecting to MongoDB...")
+    logging.info("Creating UniFi Super Admin")
+    logging.info("Connecting to MongoDB...")
     site_ids = []
     client = pymongo.MongoClient("mongodb://127.0.0.1:27117/ace")
     mdb = client.ace
-    print("Inserting Admin...")
-    insert_admin = mdb.admin.insert({"email" : args.email, "last_site_name" : "default", "name" : args.username, "x_shadow" : sha512_crypt(password)})
+    logging.info("Inserting Admin...")
+    insert_admin = mdb.admin.insert_one({"email" : args.email, "last_site_name" : "default", "name" : args.username, "x_shadow" : sha512_crypt(password)})
     db_dump = mdb.site.find()
     admin_list = mdb.admin.find()
-    print("Promoting Admin to Super Admin...")
+    logging.info("Promoting Admin to Super Admin...")
     for admin in admin_list:
         try:
             if admin["email"] == args.email:
@@ -46,7 +46,7 @@ if args.email is not None and password is not None and args.username is not None
         site_id = str(site["_id"])
         site_ids.append(site_id)
     for site_id in site_ids:
-        mdb.privilege.insert({"admin_id" : new_admin_id, "site_id" : site_id, "role" : "admin", "permissions" : [ ] })
+        mdb.privilege.insert_one({"admin_id" : new_admin_id, "site_id" : site_id, "role" : "admin", "permissions" : [ ] })
     print("UniFi Super Admin created")
     print("Username: " + args.username)
     print("Password: " + password)

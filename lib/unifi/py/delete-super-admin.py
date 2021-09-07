@@ -10,7 +10,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-u','--username', help='UniFi username of Super Admin to delete')
 args = parser.parse_args()
 
-if args.username is not None or args.email is not None:
+if args.username is not None:
     is_email = None
     if "@" in args.username:
         is_email = True
@@ -32,18 +32,15 @@ if args.username is not None or args.email is not None:
             except:
                 continue
         logging.info("Deleting Admin...")
-        mdb.admin.remove({'name': args.username})
+        mdb.admin.delete_many({'name': args.username})
         for site in db_dump:
             site_id = str(site["_id"])
             site_ids.append(site_id)
-        logging.info("Removing privileges from all sites...")
+        logging.info("Deleting privileges from all sites...")
         for site_id in site_ids:
-            mdb.privilege.remove({"admin_id" : admin_id, "site_id" : site_id})
-        logging.info("Deleted the account for: ")
-        logging.info(args.username)
-
-    else:
-        print("Error: Missing argument. --username is required.")
+            mdb.privilege.delete_many({"admin_id" : admin_id, "site_id" : site_id})
+        print("Deleted the account for: ")
+        print(args.username)
 
     if is_email == True:
         logging.info("Deleting UniFi Super Admin by email")
@@ -62,15 +59,15 @@ if args.username is not None or args.email is not None:
             except:
                 continue
         logging.info("Deleting Admin...")
-        mdb.admin.remove({'name': admin_name})
+        mdb.admin.delete_many({'name': admin_name})
         for site in db_dump:
             site_id = str(site["_id"])
             site_ids.append(site_id)
         logging.info("Removing privileges from all sites...")
         for site_id in site_ids:
-            mdb.privilege.remove({"admin_id" : admin_id, "site_id" : site_id})
-        logging.info("Deleted the account for username: ")
-        logging.info(admin_name)
+            mdb.privilege.delete_many({"admin_id" : admin_id, "site_id" : site_id})
+        print("Deleted the account for username: ")
+        print(admin_name)
 
 else:
-    print("Error: Missing argument. --email is required.")
+    print("Error: Missing argument. --username is required.")
