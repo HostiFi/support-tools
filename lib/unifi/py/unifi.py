@@ -40,7 +40,7 @@ class UniFi(object):
 
     def create_manual_backup(self):
         logging.info("Running cmd")
-        params = {"cmd": 'backup'}
+        params = {"cmd": "backup", "days": 0}
         params = json.dumps(params)
         url = self.url + "api/s/default/cmd/backup"
         r = self.s.post(url=url, data=params, verify=self.verify_ssl, timeout=120)
