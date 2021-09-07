@@ -5,6 +5,7 @@ from random import SystemRandom
 import argparse
 import pymongo
 import random
+import logging
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-u','--username', help='UniFi username to create')
