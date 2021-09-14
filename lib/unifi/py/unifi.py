@@ -131,7 +131,7 @@ class UniFi(object):
                 logging.info("Failed to load set installed")
                 time.sleep(1)
                 time_check +=1
-                
+
     def _set_wizard_locale(self):
         logging.info('Setting UniFi Wizard Locale')
         time_check = 0
