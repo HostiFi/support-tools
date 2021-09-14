@@ -225,14 +225,25 @@ class UniFi(object):
         r = self.s.post(url=url, data=params, verify=self.verify_ssl, timeout=120)
         return json.loads(r.text)["data"][0]["url"]
 
-    def restore_backup(self, path_to_backup_file):
-        print("Restoring backup")
+    def upload_backup(self, path_to_backup_file):
+        logging.info("Uploading unf")
         logging.info("Restoring backup: " + path_to_backup_file)
-        unf_backup = open(path_to_backup_file, "rb")
-        r = requests.post(self.url + "/upload/backup", files = {"file": unf_backup})
-        logging.info(r)
-        print(r)
-        return r
+        headers = {
+            'Accept': 'application/json, text/plain, */*',
+            'Host': self.hostname + ':8443',
+            'Origin': self.url,
+            'Referer': self.url + 'manage/site/default/dashboard',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+        upload_url = self.url + "upload/backup"
+        files = {'file': open(path_to_backup_file,'rb')}
+        r = self.s.post(upload_url, verify=self.verify_ssl, files=files, headers=headers)
+        r = json.loads(r.text)
+        logging(r)
+        backup_id = r["meta"]["backup_id"]
+        logging.info(backup_id)
+        return backup_id
 
     def logout(self):
         logging.info("Logging out of " + self.hostname)
