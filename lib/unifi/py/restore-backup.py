@@ -25,7 +25,7 @@ if args.file is not None:
         hostname = r.split('.')[0] + ".hostifi.com"
         unifi_server = UniFi(hostname, user, password)
         unifi_server.login()
-#        unifi_server.complete_unifi_wizard(email)
+        unifi_server.complete_unifi_wizard(email)
         unifi_server.restore_backup(args.file)
         unifi_server.logout()
         os.system("/usr/bin/python3 " + dir_path + "/delete-super-admin.py -u " + user)
