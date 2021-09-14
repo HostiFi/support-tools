@@ -226,7 +226,18 @@ class UniFi(object):
         return json.loads(r.text)["data"][0]["url"]
 
     def restore_backup(self, path_to_backup_file):
-        self.upload_backup(path_to_backup_file)
+        logging.info("Restoring server to " + path_to_backup_file)
+        r = self.upload_backup(path_to_backup_file)
+        backup_id = r["meta"]["backup_id"]
+        site_id = r["meta"]["data"]["sites"][0]["_id"]
+        logging.info(site_id)
+        logging.info(backup_id)
+        params = {"cmd": "restore", "backup_id": backup_id, "site_id": site_id}
+        params = json.dumps(params)
+        url = self.url + "api/s/default/cmd/backup"
+        r = self.s.post(url=url, data=params, verify=self.verify_ssl, timeout=120)
+        logging.info(r)
+        return json.loads(r.text)["data"][0]["url"]
 
     def upload_backup(self, path_to_backup_file):
         logging.info("Uploading unf")
@@ -244,9 +255,7 @@ class UniFi(object):
         r = self.s.post(upload_url, verify=self.verify_ssl, files=files, headers=headers)
         r = json.loads(r.text)
         logging.info(r)
-        backup_id = r["meta"]["backup_id"]
-        logging.info(backup_id)
-        return backup_id
+        return r
 
     def logout(self):
         logging.info("Logging out of " + self.hostname)
