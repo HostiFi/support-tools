@@ -2,8 +2,8 @@
 echo "Still in development, use the Notion guide for now! -rchase"
 #exit
 parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
-cd "$parent_path" > /dev/null
-path_to_latest_backup=$(find /usr/lib/unifi/data/backup/ -maxdepth 3 -name '*.unf' -type f -printf "%TY-%Tm-%Td %TT %p\n" | sort -r | head -1 | awk '{print $3}' > /dev/null)
+cd "$parent_path"
+path_to_latest_backup=$(find /usr/lib/unifi/data/backup/ -maxdepth 3 -name '*.unf' -type f -printf "%TY-%Tm-%Td %TT %p\n" 2>/dev/null | sort -r | head -1 | awk '{print $3}')
 if test -f "$path_to_latest_backup"; then
 	echo "Backup to be restored:"
 	echo $path_to_latest_backup
@@ -32,7 +32,7 @@ if [[ $CHOICE == "y" || $CHOICE == "Y" ]]; then
 	echo "Placing server into Zabbix maintenance mode"
 	# This checks if maintenance mode is already enabled (output shows it became disabled),
 	# if disabled it runs maintenance-mode.sh again to enable it
-	if /bin/bash /root/support-tools/unifi/maintenance-mode.sh | grep 'disabled' > /dev/null; then
+	if /bin/bash /root/support-tools/unifi/maintenance-mode.sh | grep 'disabled' 2> /dev/null; then
 	    /bin/bash /root/support-tools/unifi/maintenance-mode.sh
 	fi
 	echo "Purging UniFi"
@@ -52,7 +52,7 @@ if [[ $CHOICE == "y" || $CHOICE == "Y" ]]; then
 	echo "Removing server from Zabbix maintenance mode"
 	# This checks if maintenance mode is already disabled (output shows it became enabled),
 	# if enabled it runs maintenance-mode.sh again to disable it
-	if /bin/bash /root/support-tools/unifi/maintenance-mode.sh | grep 'enabled' > /dev/null; then
+	if /bin/bash /root/support-tools/unifi/maintenance-mode.sh | grep 'enabled' 2> /dev/null; then
 	    /bin/bash /root/support-tools/unifi/maintenance-mode.sh
 	fi
 	echo "Done!"
