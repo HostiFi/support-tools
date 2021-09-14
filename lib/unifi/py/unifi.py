@@ -236,8 +236,8 @@ class UniFi(object):
         params = json.dumps(params)
         url = self.url + "api/s/default/cmd/backup"
         r = self.s.post(url=url, data=params, verify=self.verify_ssl, timeout=120)
-        logging.info(r)
-        return json.loads(r.text)["data"][0]["url"]
+        logging.info(r.text)
+        return r
 
     def upload_backup(self, path_to_backup_file):
         logging.info("Uploading unf")
