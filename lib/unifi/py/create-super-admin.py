@@ -9,6 +9,7 @@ import logging
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-u','--username', help='UniFi username to create')
+parser.add_argument('-p', '--password', help='UniFi password to create')
 parser.add_argument('-e', '--email', help='UniFi email to create')
 args = parser.parse_args()
 
@@ -26,7 +27,7 @@ def sha512_crypt(password, salt=None, rounds=None):
         prefix += 'rounds={0}$'.format(rounds)
     return crypt.crypt(password, prefix + salt)
 
-if args.email is not None and password is not None and args.username is not None:
+def create_super_admin(password):
     logging.info("Creating UniFi Super Admin")
     logging.info("Connecting to MongoDB...")
     site_ids = []
@@ -52,5 +53,13 @@ if args.email is not None and password is not None and args.username is not None
     print("Username: " + args.username)
     print("Password: " + password)
 
+if args.password:
+    if args.email is not None and args.password is not None and args.username is not None:
+        create_super_admin(args.password)
+    else:
+        print("Error: Missing arguments. --username, and --email are required. --password is optional.")
 else:
-    print("Error: Missing arguments. --username, and --email are required.")
+    if args.email is not None and password is not None and args.username is not None:
+        create_super_admin(password)
+    else:
+        print("Error: Missing arguments. --username, and --email are required. --password is optional.")

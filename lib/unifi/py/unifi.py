@@ -39,12 +39,19 @@ class UniFi(object):
         open(storage_path, 'wb').write(r.content)
 
     def create_manual_backup(self):
-        logging.info("Running cmd")
+        logging.info("Creating settings only manual backup")
         params = {"cmd": "backup", "days": 0}
         params = json.dumps(params)
         url = self.url + "api/s/default/cmd/backup"
         r = self.s.post(url=url, data=params, verify=self.verify_ssl, timeout=120)
         return json.loads(r.text)["data"][0]["url"]
+
+    def restore_backup(self, path_to_backup_file):
+        logging.info("Restoring backup: " + path_to_backup_file)
+        unf_backup = open(path_to_backup_file, "rb")
+        r = requests.post(test_url, files = {"file": unf_backup})
+        logging.info(r)
+        return r
 
     def logout(self):
         logging.info("Logging out of " + self.hostname)

@@ -8,10 +8,8 @@ import subprocess
 import re
 import random
 import socket
-from random import SystemRandom
 import string
 import warnings
-import os
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 
@@ -20,7 +18,6 @@ warnings.filterwarnings('ignore', message='Unverified HTTPS request')
 r = socket.gethostname()
 hostname = r.split('.')[0] + ".hostifi.com"
 
-randchoice = SystemRandom().choice
 username_postfix = ''.join(random.choice(string.ascii_letters) for i in range(4))
 
 def human_readable(bytes, units=[' bytes','KB','MB','GB','TB', 'PB', 'EB']):
