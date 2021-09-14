@@ -27,7 +27,7 @@ if [[ $CHOICE == "y" || $CHOICE == "Y" ]]; then
 	echo "Purging UniFi"
 	apt-get purge unifi -y
 	echo "Installing UniFi"
-	apt-get purge unifi -y
+	apt-get install unifi -y
 	apt autoremove
 	echo "Restoring from latest backup"
 	parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )

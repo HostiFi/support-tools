@@ -12,6 +12,7 @@ dir_path = os.path.dirname(os.path.abspath(__file__))
 
 password = ''.join(random.choice(string.ascii_letters) for i in range(8))
 user = "temprestorescript" + ''.join(random.choice(string.ascii_letters) for i in range(4))
+email = user + "@hostifi.com"
 
 print("Restoring UniFi from " + str(args.file))
 print("Creating super admin...")
@@ -20,6 +21,7 @@ r = socket.gethostname()
 hostname = r.split('.')[0] + ".hostifi.com"
 unifi_server = UniFi(hostname, user, password)
 unifi_server.login()
+unifi_server.complete_unifi_wizard(email)
 unifi_server.restore_backup(args.file)
 unifi_server.logout()
 os.system("/usr/bin/python3 " + dir_path + "/delete-super-admin.py -u " + user)
