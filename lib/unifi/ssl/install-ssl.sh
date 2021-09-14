@@ -41,7 +41,7 @@ rm /root/certbotcron
 
 echo "Creating Let's Encrypt cron"
 crontab -l > /root/letsencryptcron
-echo "0 23 * * * /bin/bash /root/support-tools/lib/ssl/import-ssl.sh -d ${DOMAINS[0]}" >> /root/letsencryptcron
+echo "0 23 * * * /bin/bash /root/support-tools/lib/unifi/ssl/import-ssl.sh -d ${DOMAINS[0]}" >> /root/letsencryptcron
 crontab /root/letsencryptcron
 rm /root/letsencryptcron
 
