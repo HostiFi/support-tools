@@ -227,7 +227,7 @@ class UniFi(object):
 
     def restore_backup(self, path_to_backup_file):
         self.upload_backup(path_to_backup_file)
-        
+
     def upload_backup(self, path_to_backup_file):
         logging.info("Uploading unf")
         logging.info("Restoring backup: " + path_to_backup_file)
@@ -243,7 +243,7 @@ class UniFi(object):
         files = {'file': open(path_to_backup_file,'rb')}
         r = self.s.post(upload_url, verify=self.verify_ssl, files=files, headers=headers)
         r = json.loads(r.text)
-        logging(r)
+        logging.info(r)
         backup_id = r["meta"]["backup_id"]
         logging.info(backup_id)
         return backup_id
