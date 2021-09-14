@@ -225,6 +225,9 @@ class UniFi(object):
         r = self.s.post(url=url, data=params, verify=self.verify_ssl, timeout=120)
         return json.loads(r.text)["data"][0]["url"]
 
+    def restore_backup(self, path_to_backup_file):
+        self.upload_backup(path_to_backup_file)
+        
     def upload_backup(self, path_to_backup_file):
         logging.info("Uploading unf")
         logging.info("Restoring backup: " + path_to_backup_file)
