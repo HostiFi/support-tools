@@ -9,7 +9,7 @@ r = socket.gethostname()
 hostname = r.split('.')[0] + ".hostifi.com"
 
 zabbix = zabbix.Zabbix()
-hostid = [zabbix.get_hostid_from_hostname("m03397.hostifi.com")]
+hostid = [zabbix.get_hostid_from_hostname(hostname)]
 logging.info("hostid:")
 logging.info(hostid)
 existing_hostids = zabbix.get_hostids_in_maintenance_mode()
