@@ -10,6 +10,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-f','--file', help='Path to backup file to be restored')
+parser.add_argument('-w','--wizard', help='Kill the wizard [y/n]')
 args = parser.parse_args()
 
 if args.file is not None:
@@ -25,7 +26,8 @@ if args.file is not None:
         hostname = r.split('.')[0] + ".hostifi.com"
         unifi_server = UniFi(hostname, user, password)
         unifi_server.login()
-        unifi_server.complete_unifi_wizard(email)
+        if args.wizard == "y":
+            unifi_server.complete_unifi_wizard(email)
         unifi_server.restore_backup(args.file)
         unifi_server.logout()
         os.system("/usr/bin/python3 " + dir_path + "/delete-super-admin.py -u " + user)

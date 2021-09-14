@@ -1,6 +1,13 @@
 #!/bin/bash
 echo "Still in development, use the Notion guide for now! -rchase"
-exit
+#exit
+parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+cd "$parent_path"
+path_to_latest_backup=$(find /usr/lib/unifi/data/backup/ -maxdepth 3 -name '*.unf' -type f -printf "%TY-%Tm-%Td %TT %p\n" | sort -r | head -1 | awk '{print $3}')
+echo "Backup to be restored:"
+echo $path_to_latest_backup
+echo "Backup date:"
+date -r $path_to_latest_backup
 echo "Are you sure you want to reinstall UniFi? [y/n]"
 read CHOICE
 if [[ $CHOICE == "y" || $CHOICE == "Y" ]]; then
@@ -30,10 +37,7 @@ if [[ $CHOICE == "y" || $CHOICE == "Y" ]]; then
 	apt-get install unifi -y
 	apt autoremove
 	echo "Restoring from latest backup"
-	parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
-	cd "$parent_path"
-	path_to_latest_backup=$(find /usr/lib/unifi/data/backup/ -maxdepth 3 -name '*.unf' -type f -printf "%TY-%Tm-%Td %TT %p\n" | sort -r | head -1 | awk '{print $3}')
-	/usr/bin/python3 ../lib/unifi/py/restore-backup.py -f $path_to_latest_backup || echo "Error: restoring from backup failed!"
+	/usr/bin/python3 ../lib/unifi/py/restore-backup.py -f $path_to_latest_backup -w y || echo "Error: restoring from backup failed!"
 	echo "Copying system.properties to new install"
 	cp /tmp/reinstall-unifi/system.properties /usr/lib/unifi/data/system.properties
 	echo "Installing SSL"
