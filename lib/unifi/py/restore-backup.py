@@ -29,7 +29,8 @@ if args.file is not None:
 		unifi_server.restore_backup(args.file)
 		unifi_server.logout()
 		os.system("/usr/bin/python3 " + dir_path + "/delete-super-admin.py -u " + user)
-	except:
+	except Exception as e:
+		logging.info(e)
 	    print("Error: restore failed!")
 	    os.system("/usr/bin/python3 " + dir_path + "/delete-super-admin.py -u " + user)
 else:
