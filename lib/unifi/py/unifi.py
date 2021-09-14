@@ -47,10 +47,12 @@ class UniFi(object):
         return json.loads(r.text)["data"][0]["url"]
 
     def restore_backup(self, path_to_backup_file):
+        print("Restoring backup")
         logging.info("Restoring backup: " + path_to_backup_file)
         unf_backup = open(path_to_backup_file, "rb")
         r = requests.post(test_url, files = {"file": unf_backup})
         logging.info(r)
+        print(r)
         return r
 
     def logout(self):
