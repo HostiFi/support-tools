@@ -2,7 +2,7 @@
 echo "Still in development, use the Notion guide for now! -rchase"
 #exit
 parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
-cd "$parent_path"
+cd "$parent_path" > /dev/null
 path_to_latest_backup=$(find /usr/lib/unifi/data/backup/ -maxdepth 3 -name '*.unf' -type f -printf "%TY-%Tm-%Td %TT %p\n" | sort -r | head -1 | awk '{print $3}' > /dev/null)
 if test -f "$path_to_latest_backup"; then
 	echo "Backup to be restored:"
