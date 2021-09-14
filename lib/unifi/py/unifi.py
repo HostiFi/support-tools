@@ -229,7 +229,7 @@ class UniFi(object):
         print("Restoring backup")
         logging.info("Restoring backup: " + path_to_backup_file)
         unf_backup = open(path_to_backup_file, "rb")
-        r = requests.post(test_url, files = {"file": unf_backup})
+        r = requests.post(self.url + "/upload/backup", files = {"file": unf_backup})
         logging.info(r)
         print(r)
         return r
