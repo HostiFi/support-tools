@@ -229,7 +229,7 @@ class UniFi(object):
         logging.info("Restoring server to " + path_to_backup_file)
         r = self.upload_backup(path_to_backup_file)
         backup_id = r["meta"]["backup_id"]
-        site_id = r["data"]["sites"][0]["_id"]
+        site_id = r["data"][0]["sites"][0]["_id"]
         logging.info(site_id)
         logging.info(backup_id)
         params = {"cmd": "restore", "backup_id": backup_id, "site_id": site_id}
