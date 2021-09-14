@@ -3,6 +3,7 @@ import random
 import os
 import socket
 from unifi import UniFi
+import string
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-f','--file', help='Path to backup file to be restored')

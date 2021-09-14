@@ -111,6 +111,27 @@ class UniFi(object):
         else:
             logging.info("UniFi install failed")
 
+    def _set_wizard_installed(self):
+        time_check = 0
+        while time_check < 120:
+            time_check += 1
+            try:
+                url = self.url + 'api/cmd/system'
+                payload = {'cmd': "set-installed"}
+                r = requests.post(url, data=json.dumps(payload), verify=self.verify_ssl)
+                if r.status_code == 200:
+                    logging.info("Successfully set UniFi installed")
+                    logging.debug(r.text)
+                    break
+                else:
+                    logging.info("Failed to load set installed")
+                    time.sleep(1)
+                    time_check +=1
+            except:
+                logging.info("Failed to load set installed")
+                time.sleep(1)
+                time_check +=1
+                
     def _set_wizard_locale(self):
         logging.info('Setting UniFi Wizard Locale')
         time_check = 0
