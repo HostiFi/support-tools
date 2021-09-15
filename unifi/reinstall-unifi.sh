@@ -10,12 +10,12 @@ if test -f "$path_to_latest_backup"; then
 	printf "\n\nAre you sure you want to reinstall UniFi and restore with this backup? [y/n]"
 else
 	printf "\nWarning: No backups were found!"
-	printf "\n\nAre you sure you want to reinstall UniFi without a backup? [y/n]"
+	printf "\n\nAre you sure you want to reinstall UniFi without a backup? [y/n]\n"
 fi
 read CHOICE
-echo "\nPossible domain names for SSL:"
+printf "\nPossible domain names for SSL:"
 ls /etc/letsencrypt/live
-echo "\n\nEnter a comma separated list of domain names to install a UniFi SSL for:"
+printf "\n\nEnter a comma separated list of domain names to install a UniFi SSL for:"
 read DOMAINS
 IFS=', ' read -r -a DOMAINLIST <<< "$DOMAINS"
 for DOMAIN in "${DOMAINLIST[@]}"
