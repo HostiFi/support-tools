@@ -3,6 +3,7 @@ parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 cd "$parent_path"
 path_to_latest_backup=$(find /usr/lib/unifi/data/backup/ -maxdepth 3 -name '*.unf' -type f -printf "%TY-%Tm-%Td %TT %p\n" 2>/dev/null | sort -r | head -1 | awk '{print $3}')
 if test -f "$path_to_latest_backup"; then
+	cp $path_to_latest_backup /tmp/reinstall-unifi/backup/reinstall.unf
 	echo "Backup to be restored:"
 	echo $path_to_latest_backup
 	printf "\nBackup date:\n"
@@ -52,9 +53,9 @@ if [[ $CHOICE == "y" || $CHOICE == "Y" ]]; then
 	echo "Installing UniFi"
 	apt-get install unifi -y
 	apt autoremove
-	if test -f "$path_to_latest_backup"; then
+	if test -f "/tmp/reinstall-unifi/backup/reinstall.unf"; then
 		echo "Restoring from latest backup"
-		/usr/bin/python3 ../lib/unifi/py/restore-backup.py -f $path_to_latest_backup -w y || echo "Error: Restoring from backup failed!"
+		/usr/bin/python3 ../lib/unifi/py/restore-backup.py -f "/tmp/reinstall-unifi/backup/reinstall.unf" -w y || echo "Error: Restoring from backup failed!"
 	else
 		echo "Killing the wizard"
 		/usr/bin/python3 ../lib/unifi/py/restore-backup.py -w y || echo "Error: Killing the wizard failed!"
