@@ -5,12 +5,12 @@ path_to_latest_backup=$(find /usr/lib/unifi/data/backup/ -maxdepth 3 -name '*.un
 if test -f "$path_to_latest_backup"; then
 	echo "Backup to be restored:"
 	echo $path_to_latest_backup
-	echo "\nBackup date:"
+	printf "\nBackup date:"
 	date -r $path_to_latest_backup
-	echo "\n\nAre you sure you want to reinstall UniFi and restore with this backup? [y/n]"
+	printf "\n\nAre you sure you want to reinstall UniFi and restore with this backup? [y/n]"
 else
-	echo "\nWarning: No backups were found!"
-	echo "\n\nAre you sure you want to reinstall UniFi without a backup? [y/n]"
+	printf "\nWarning: No backups were found!"
+	printf "\n\nAre you sure you want to reinstall UniFi without a backup? [y/n]"
 fi
 read CHOICE
 echo "\nPossible domain names for SSL:"
