@@ -45,7 +45,7 @@ class UniFi(object):
                 r = requests.post(url, data=json.dumps(payload), verify=self.verify_ssl)
                 if r.status_code == 200:
                     logging.info("Successfully set default admin")
-                    logging.debug(r.text)
+                    logging.info(r.text)
                     break
                 else:
                     logging.info("Failed to set default admin")
@@ -67,7 +67,7 @@ class UniFi(object):
                 r = requests.post(url, data=json.dumps(payload), verify=self.verify_ssl)
                 if r.status_code == 200:
                     logging.info("Successfully set default country")
-                    logging.debug(r.text)
+                    logging.info(r.text)
                     break
                 else:
                     logging.info("Failed to set country")
@@ -75,7 +75,7 @@ class UniFi(object):
                     time.sleep(1)
             except Exception as e:
                 logging.info("Failed to set country")
-                logging.debug(e)
+                logging.info(e)
                 time_check += 1
                 time.sleep(1)
 
@@ -92,8 +92,8 @@ class UniFi(object):
                 logging.info(r.status_code)
                 if r.status_code == 200:
                     if '"up":true' not in r.text:
-                        logging.debug(r.text)
-                        logging.debug(r.status_code)
+                        logging.info(r.text)
+                        logging.info(r.status_code)
                         unifi_status = 1
                         break
                     else:
@@ -121,7 +121,7 @@ class UniFi(object):
                 r = requests.post(url, data=json.dumps(payload), verify=self.verify_ssl)
                 if r.status_code == 200:
                     logging.info("Successfully set UniFi installed")
-                    logging.debug(r.text)
+                    logging.info(r.text)
                     break
                 else:
                     logging.info("Failed to load set installed")
@@ -142,7 +142,7 @@ class UniFi(object):
                 r = requests.post(url, data=json.dumps(payload), verify=self.verify_ssl)
                 if r.status_code == 200:
                     logging.info("Successfully set locale")
-                    logging.debug(r.text)
+                    logging.info(r.text)
                     break
                 else:
                     logging.info("Failed to load locale")
@@ -150,7 +150,7 @@ class UniFi(object):
                     time_check += 1
             except Exception as e:
                 logging.info("Failed to load locale")
-                logging.debug(e)
+                logging.info(e)
                 time_check += 1
                 time.sleep(1)
 
@@ -164,16 +164,16 @@ class UniFi(object):
                 r = requests.post(url, data=json.dumps(payload), verify=self.verify_ssl)
                 if r.status_code == 200:
                     logging.info("Successfully set device SSH creds")
-                    logging.debug(r.text)
+                    logging.info(r.text)
                     break
                 else:
-                    logging.debug(r.text)
-                    logging.debug(r.status_code)
+                    logging.info(r.text)
+                    logging.info(r.status_code)
                     logging.info("Failed to load device ssh creds")
                     time.sleep(1)
                     time_check += 1
             except Exception as e:
-                logging.debug(e)
+                logging.info(e)
                 logging.info("Failed to load device ssh creds")
                 time.sleep(1)
                 time_check += 1     
@@ -190,7 +190,7 @@ class UniFi(object):
                 r = requests.post(url, data=json.dumps(payload), verify=self.verify_ssl)
                 if r.status_code == 200:
                     logging.info("Successfully set auto backups")
-                    logging.debug(r.text)
+                    logging.info(r.text)
                     break
                 else:
                     logging.info("Failed to load auto backups")
@@ -263,4 +263,4 @@ class UniFi(object):
         r = self.s.get(url=url, verify=self.verify_ssl, timeout=30)
         self.s.close()
         logging.info("Logged out")
-        logging.debug(r.status_code)
+        logging.info(r.status_code)

@@ -55,7 +55,7 @@ if [[ $CHOICE == "y" || $CHOICE == "Y" ]]; then
 		/usr/bin/python3 ../lib/unifi/py/restore-backup.py -f $path_to_latest_backup -w y || echo "Error: Restoring from backup failed!"
 	else
 		echo "Killing the wizard"
-		/usr/bin/python3 ../lib/unifi/py/restore-backup.py -w y || echo "Error: Restoring from backup failed!"
+		/usr/bin/python3 ../lib/unifi/py/restore-backup.py -w y || echo "Error: Killing the wizard failed!"
 	fi
 	echo "Copying system.properties to new install"
 	cp /tmp/reinstall-unifi/system.properties /usr/lib/unifi/data/system.properties
