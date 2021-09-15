@@ -7,6 +7,8 @@ if test -f "$path_to_latest_backup"; then
 	echo $path_to_latest_backup
 	printf "\nBackup date:\n"
 	date -r $path_to_latest_backup
+	printf "\nBackup size:\n"
+	ls -lah $path_to_latest_backup | awk -F " " {'print $5'}
 	printf "\n\nAre you sure you want to reinstall UniFi and restore with this backup? [y/n]\n"
 else
 	printf "\nWarning: No backups were found!"
@@ -60,6 +62,8 @@ if [[ $CHOICE == "y" || $CHOICE == "Y" ]]; then
 	echo "Copying system.properties to new install"
 	sed -i 's/is_default=true/is_default=false/g' /tmp/reinstall-unifi/system.properties
 	cp /tmp/reinstall-unifi/system.properties /usr/lib/unifi/data/system.properties
+	echo "Copying backups to new install"
+	cp -R /tmp/reinstall-unifi/backup/* /usr/lib/unifi/data/backup
 	echo "Installing SSL"
 	parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 	cd "$parent_path"
