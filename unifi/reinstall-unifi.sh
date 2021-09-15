@@ -3,7 +3,7 @@ parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 cd "$parent_path"
 path_to_latest_backup=$(find /usr/lib/unifi/data/backup/ -maxdepth 3 -name '*.unf' -type f -printf "%TY-%Tm-%Td %TT %p\n" 2>/dev/null | sort -r | head -1 | awk '{print $3}')
 if test -f "$path_to_latest_backup"; then
-	cp $path_to_latest_backup /tmp/reinstall-unifi/backup/reinstall.unf
+	cp $path_to_latest_backup /root/reinstall-unifi/backup/reinstall.unf
 	echo "Backup to be restored:"
 	echo $path_to_latest_backup
 	printf "\nBackup date:\n"
@@ -36,12 +36,12 @@ if [[ $CHOICE == "y" || $CHOICE == "Y" ]]; then
 	parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 	cd "$parent_path"
 	/usr/bin/python3 ../lib/unifi/py/manual-backup.py || echo "Error: Manual backup failed!"
-	echo "Copying backups to /tmp/reinstall"
-	rm -rf /tmp/reinstall-unifi
-	mkdir /tmp/reinstall-unifi
-	cp -r /usr/lib/unifi/data/backup /tmp/reinstall-unifi
-	echo "Copying system.properties to /tmp/reinstall"
-	cp /usr/lib/unifi/data/system.properties /tmp/reinstall-unifi/system.properties
+	echo "Copying backups to /root/reinstall-unifi"
+	rm -rf /root/reinstall-unifi
+	mkdir /root/reinstall-unifi
+	cp -r /usr/lib/unifi/data/backup /root/reinstall-unifi
+	echo "Copying system.properties to /root/reinstall-unifi"
+	cp /usr/lib/unifi/data/system.properties /root/reinstall-unifi/system.properties
 	echo "Placing server into Zabbix maintenance mode"
 	# This checks if maintenance mode is already enabled (output shows it became disabled),
 	# if disabled it runs maintenance-mode.sh again to enable it
@@ -53,18 +53,18 @@ if [[ $CHOICE == "y" || $CHOICE == "Y" ]]; then
 	echo "Installing UniFi"
 	apt-get install unifi -y
 	apt autoremove
-	if test -f "/tmp/reinstall-unifi/backup/reinstall.unf"; then
+	if test -f "/root/reinstall-unifi/backup/reinstall.unf"; then
 		echo "Restoring from latest backup"
-		/usr/bin/python3 ../lib/unifi/py/restore-backup.py -f "/tmp/reinstall-unifi/backup/reinstall.unf" -w y || echo "Error: Restoring from backup failed!"
+		/usr/bin/python3 ../lib/unifi/py/restore-backup.py -f "/root/reinstall-unifi/backup/reinstall.unf" -w y || echo "Error: Restoring from backup failed!"
 	else
 		echo "Killing the wizard"
 		/usr/bin/python3 ../lib/unifi/py/restore-backup.py -w y || echo "Error: Killing the wizard failed!"
 	fi
 	echo "Copying system.properties to new install"
-	sed -i 's/is_default=true/is_default=false/g' /tmp/reinstall-unifi/system.properties
-	cp /tmp/reinstall-unifi/system.properties /usr/lib/unifi/data/system.properties
+	sed -i 's/is_default=true/is_default=false/g' /root/reinstall-unifi/system.properties
+	cp /root/reinstall-unifi/system.properties /usr/lib/unifi/data/system.properties
 	echo "Copying backups to new install"
-	cp -R /tmp/reinstall-unifi/backup/* /usr/lib/unifi/data/backup
+	cp -R /root/reinstall-unifi/backup/* /usr/lib/unifi/data/backup
 	echo "Installing SSL"
 	parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 	cd "$parent_path"
