@@ -13,9 +13,9 @@ else
 	printf "\n\nAre you sure you want to reinstall UniFi without a backup? [y/n]\n"
 fi
 read CHOICE
-printf "\nPossible domain names for SSL:"
+printf "\nPossible domain names for SSL:\n"
 ls /etc/letsencrypt/live
-printf "\n\nEnter a comma separated list of domain names to install a UniFi SSL for:"
+printf "\n\nEnter a comma separated list of domain names to install a UniFi SSL for:\n"
 read DOMAINS
 IFS=', ' read -r -a DOMAINLIST <<< "$DOMAINS"
 for DOMAIN in "${DOMAINLIST[@]}"
@@ -50,8 +50,13 @@ if [[ $CHOICE == "y" || $CHOICE == "Y" ]]; then
 	echo "Installing UniFi"
 	apt-get install unifi -y
 	apt autoremove
-	echo "Restoring from latest backup"
-	/usr/bin/python3 ../lib/unifi/py/restore-backup.py -f $path_to_latest_backup -w y || echo "Error: Restoring from backup failed!"
+	if test -f "$path_to_latest_backup"; then
+		echo "Restoring from latest backup"
+		/usr/bin/python3 ../lib/unifi/py/restore-backup.py -f $path_to_latest_backup -w y || echo "Error: Restoring from backup failed!"
+	else
+		echo "Killing the wizard"
+		/usr/bin/python3 ../lib/unifi/py/restore-backup.py -w y || echo "Error: Restoring from backup failed!"
+	fi
 	echo "Copying system.properties to new install"
 	cp /tmp/reinstall-unifi/system.properties /usr/lib/unifi/data/system.properties
 	echo "Installing SSL"
