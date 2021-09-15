@@ -107,9 +107,9 @@ class UniFi(object):
                 logging.info("Failed to load")
                 time.sleep(1)
         if unifi_status == 1:
-            logging.info("UniFi installed successfully")
-        else:
             logging.info("UniFi install failed")
+        else:
+            logging.info("UniFi installed successfully")
 
     def _set_wizard_installed(self):
         time_check = 0

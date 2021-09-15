@@ -58,6 +58,7 @@ if [[ $CHOICE == "y" || $CHOICE == "Y" ]]; then
 		/usr/bin/python3 ../lib/unifi/py/restore-backup.py -w y || echo "Error: Killing the wizard failed!"
 	fi
 	echo "Copying system.properties to new install"
+	sed -i 's/is_default=true/is_default=false/g' /tmp/reinstall-unifi/system.properties
 	cp /tmp/reinstall-unifi/system.properties /usr/lib/unifi/data/system.properties
 	echo "Installing SSL"
 	parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
