@@ -29,6 +29,9 @@ try:
         os.system("/usr/bin/python3 " + dir_path + "/create-super-admin.py -u " + user + " -p " + password + " -e support@hostifi.com")
         unifi_server = UniFi(hostname, user, password)
         unifi_server.login()
+    print("This is args.file:")
+    print(args.file)
+    print("Done")
     if args.file is not None:
         print("Restoring UniFi from " + str(args.file))
         unifi_server.restore_backup(args.file)
