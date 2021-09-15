@@ -9,11 +9,23 @@ if test -f "$path_to_latest_backup"; then
 	echo $path_to_latest_backup
 	echo "Backup date:"
 	date -r $path_to_latest_backup
+	echo "Are you sure you want to reinstall UniFi and restore with this backup? [y/n]"
 else
-	echo "No backups were found!"
+	echo "Warning: No backups were found!"
+	echo "Are you sure you want to reinstall UniFi without a backup? [y/n]"
 fi
-echo "Are you sure you want to reinstall UniFi? [y/n]"
 read CHOICE
+echo "Possible domain names for SSL:"
+ls /etc/letsencrypt/live
+echo "Enter a comma separated list of domain names to install a UniFi SSL for:"
+read DOMAINS
+IFS=', ' read -r -a DOMAINLIST <<< "$DOMAINS"
+for DOMAIN in "${DOMAINLIST[@]}"
+do
+  stringprefix=" -d "
+  stringpostfix=" "
+  DOMAINSTR+=$stringprefix$DOMAIN$stringpostfix
+done
 if [[ $CHOICE == "y" || $CHOICE == "Y" ]]; then
 	echo "Reinstalling UniFi and restoring from latest backup"
 	echo "Restarting the unifi service"
@@ -41,14 +53,13 @@ if [[ $CHOICE == "y" || $CHOICE == "Y" ]]; then
 	apt-get install unifi -y
 	apt autoremove
 	echo "Restoring from latest backup"
-	/usr/bin/python3 ../lib/unifi/py/restore-backup.py -f $path_to_latest_backup -w y || echo "Error: restoring from backup failed!"
+	/usr/bin/python3 ../lib/unifi/py/restore-backup.py -f $path_to_latest_backup -w y || echo "Error: Restoring from backup failed!"
 	echo "Copying system.properties to new install"
 	cp /tmp/reinstall-unifi/system.properties /usr/lib/unifi/data/system.properties
 	echo "Installing SSL"
-	ssl_name=$(find /etc/letsencrypt/live -mindepth 1 -type d -printf "%TY-%Tm-%Td %TT %f\n" | sort -r | head -1 | awk '{print $3}')
+	parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 	cd "$parent_path"
-	/bin/bash ../lib/unifi/ssl/install-ssl.sh -d $ssl_name -e "support@hostifi.com" || echo "Error: SSL install failed!"
-	echo "SSL installed for: $ssl_name"
+	/bin/bash ../lib/unifi/ssl/install-ssl.sh $DOMAINSTR -e support@hostifi.com
 	echo "Removing server from Zabbix maintenance mode"
 	# This checks if maintenance mode is already disabled (output shows it became enabled),
 	# if enabled it runs maintenance-mode.sh again to disable it
