@@ -1,23 +1,21 @@
 #!/bin/bash
-echo "Still in development, use the Notion guide for now! -rchase"
-#exit
 parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 cd "$parent_path"
 path_to_latest_backup=$(find /usr/lib/unifi/data/backup/ -maxdepth 3 -name '*.unf' -type f -printf "%TY-%Tm-%Td %TT %p\n" 2>/dev/null | sort -r | head -1 | awk '{print $3}')
 if test -f "$path_to_latest_backup"; then
 	echo "Backup to be restored:"
 	echo $path_to_latest_backup
-	echo "Backup date:"
+	echo "\nBackup date:"
 	date -r $path_to_latest_backup
-	echo "Are you sure you want to reinstall UniFi and restore with this backup? [y/n]"
+	echo "\n\nAre you sure you want to reinstall UniFi and restore with this backup? [y/n]"
 else
-	echo "Warning: No backups were found!"
-	echo "Are you sure you want to reinstall UniFi without a backup? [y/n]"
+	echo "\nWarning: No backups were found!"
+	echo "\n\nAre you sure you want to reinstall UniFi without a backup? [y/n]"
 fi
 read CHOICE
-echo "Possible domain names for SSL:"
+echo "\nPossible domain names for SSL:"
 ls /etc/letsencrypt/live
-echo "Enter a comma separated list of domain names to install a UniFi SSL for:"
+echo "\n\nEnter a comma separated list of domain names to install a UniFi SSL for:"
 read DOMAINS
 IFS=', ' read -r -a DOMAINLIST <<< "$DOMAINS"
 for DOMAIN in "${DOMAINLIST[@]}"
