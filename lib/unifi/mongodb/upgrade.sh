@@ -20,3 +20,5 @@ apt-get install -f -y --allow-unauthenticated
 service unifi stop
 service unifi start
 mongo --port 27117 --eval 'db.adminCommand( { setFeatureCompatibilityVersion: "3.6" } )'
+apt-get update -y
+apt-get upgrade -y
