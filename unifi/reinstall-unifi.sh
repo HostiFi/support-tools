@@ -26,6 +26,12 @@ do
   stringpostfix=" "
   DOMAINSTR+=$stringprefix$DOMAIN$stringpostfix
 done
+printf "\nDo you want to install the latest official version of UniFi? [y/n]\n"
+read LATEST_UNIFI_VERSION
+if [[ $LATEST_UNIFI_VERSION == "n" || $LATEST_UNIFI_VERSION == "N" ]]; then
+	printf "\nEnter the link to the UniFi .deb to install:\n"
+	read UNIFI_DEB_LINK
+fi
 if [[ $CHOICE == "y" || $CHOICE == "Y" ]]; then
 	echo "Reinstalling UniFi and restoring from latest backup"
 	echo "Restarting the unifi service"
@@ -53,8 +59,15 @@ if [[ $CHOICE == "y" || $CHOICE == "Y" ]]; then
 	echo "Purging UniFi"
 	apt-get purge unifi -y
 	echo "Installing UniFi"
-	apt-get install unifi -y
+	if [[ $LATEST_UNIFI_VERSION == "n" || $LATEST_UNIFI_VERSION == "N" ]]; then
+		printf "\nEnter the link to the UniFi .deb to install:\n"
+		wget $UNIFI_DEB_LINK -O /root/reinstall-unifi/unifi.deb
+		dpkg -i /root/reinstall-unifi/unifi.deb
+	else
+		apt-get install unifi -y
+	fi
 	apt autoremove
+	apt-get update -y
 	if test -f "/root/reinstall-unifi/backup/reinstall.unf"; then
 		echo "Restoring from latest backup"
 		/usr/bin/python3 ../lib/unifi/py/restore-backup.py -f "/root/reinstall-unifi/backup/reinstall.unf" -w y || echo "Error: Restoring from backup failed!"
