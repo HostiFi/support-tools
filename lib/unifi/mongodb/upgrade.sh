@@ -1,6 +1,6 @@
 apt-get autoremove -y
 apt-get autoclean -y
-dpkg -i /root/support-toos/unifi/mongodb/libssl1.0.0_1.0.1t-1+deb8u12_amd64.deb
+dpkg -i /root/support-tools/unifi/mongodb/libssl1.0.0_1.0.1t-1+deb8u12_amd64.deb
 wget -qO - https://www.mongodb.org/static/pgp/server-3.4.asc | apt-key add -
 echo "deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/3.4 main" | tee /etc/apt/sources.list.d/mongodb-org-3.4.list
 apt-get update -y
