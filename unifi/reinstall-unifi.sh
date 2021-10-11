@@ -86,6 +86,8 @@ if [[ $CHOICE == "y" || $CHOICE == "Y" ]]; then
 	/bin/bash ../lib/unifi/ssl/install-ssl.sh $DOMAINSTR -e support@hostifi.com
 	echo "Upgrading MongoDB from 3.2.X to 3.6.X"
 	bash /root/support-tools/lib/unifi/mongodb/upgrade.sh
+	echo "Changing permissions on all unifi files to unifi:unifi"
+	chown -R unifi:unifi /var/lib/unifi
 	echo "Removing server from Zabbix maintenance mode"
 	# This checks if maintenance mode is already disabled (output shows it became enabled),
 	# if enabled it runs maintenance-mode.sh again to disable it
