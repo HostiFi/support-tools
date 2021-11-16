@@ -28,7 +28,7 @@ if args.site_group_id:
 	site_group_id = args.site_group_id
 else:
 	site_group_id = os.popen('docker exec -it unms-postgres psql -U unms -d unms -t -c "SELECT group_id FROM access_group_site LIMIT 1;"').read()
-astr = "docker exec -it unms-postgres psql -U unms -c \"INSERT INTO unms.user (id,username,email,password,role,site_group_id) VALUES ('" + random_uuid + "','" + args.username + "','" + email + "','" + bcrypt_hash.decode('utf-8') + "','superadmin', '" + str(site_group_id).strip() + "');\""
+astr = "/bin/docker exec -it unms-postgres psql -U unms -c \"INSERT INTO unms.user (id,username,email,password,role,site_group_id) VALUES ('" + random_uuid + "','" + args.username + "','" + email + "','" + bcrypt_hash.decode('utf-8') + "','superadmin', '" + str(site_group_id).strip() + "');\""
 astr = astr.replace('$', '\\$')
 print(astr)
 r = os.popen(astr).read()
