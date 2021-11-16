@@ -31,7 +31,7 @@ else:
 astr = "docker exec -it unms-postgres psql -U unms -c \"INSERT INTO unms.user (id,username,email,password,role,site_group_id) VALUES ('" + random_uuid + "','" + args.username + "','" + email + "','" + bcrypt_hash.decode('utf-8') + "','superadmin', '" + str(site_group_id).strip() + "');\""
 astr = astr.replace('$', '\\$')
 print(astr)
-os.system(astr)
+r = os.popen(astr).read()
 print("UISP Super Admin created")
 print("Username: " + args.username)
 print("Password: " + password)
