@@ -1,7 +1,7 @@
 #!/bin/bash
 printf "Possible domain names for SSL:\n"
 ls /etc/letsencrypt/live
-printf "\nEnter a comma separated list of domain names to install a UniFi SSL for: "
+printf "\nEnter a comma separated list of domain names to install a UniFi SSL for:\n"
 read DOMAINS
 IFS=', ' read -r -a DOMAINLIST <<< "$DOMAINS"
 for DOMAIN in "${DOMAINLIST[@]}"
