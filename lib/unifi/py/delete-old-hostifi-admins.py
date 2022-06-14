@@ -13,9 +13,12 @@ for admin in admins:
         try:
             admin_created_at_utc = datetime.datetime.utcfromtimestamp(int(admin["time_created"]))
         except Exception as e:
-            # Skip accounts where time_created doesn't exist (due to use of Ubiquiti SSO)
+            # Delete HostiFi admins where time_created doesn't exist (due to use of Ubiquiti SSO)
+            print("Deleting " + admin["name"] + "...")
+            os.system("python3 /root/support-tools/lib/unifi/py/delete-super-admin.py -u " + admin["name"])
+            print("Done!")
             continue
-        # Delete if older than four hours 
+        # Delete HostiFi admins older than four hours 
         if admin_created_at_utc < four_hours_ago_utc:
             print("Deleting " + admin["name"] + "...")
             os.system("python3 /root/support-tools/lib/unifi/py/delete-super-admin.py -u " + admin["name"])
