@@ -1,25 +1,22 @@
-import pymongo
-import json
 import datetime
+import pymongo
 
-four_hours_ago_utc = datetime.datetime.now() - datetime.timedelta(hours = 4)
-client = pymongo.MongoClient("mongodb://127.0.0.1:27117/ace")
-mdb = client.ace
-admins = mdb.admin.find()
-for admin in admins:
-    # Check if admin email includes '@hostifi.com'
-    if "@hostifi.com" in admin["email"]:
-        # Get time_created on the admin account
-        try:
-            admin_created_at_utc = datetime.datetime.utcfromtimestamp(int(admin["time_created"]))
-        except Exception as e:
-            # Delete HostiFi admins where time_created doesn't exist (due to use of Ubiquiti SSO)
-            print("Deleting " + admin["name"] + "...")
-            os.system("python3 /root/support-tools/lib/unifi/py/delete-super-admin.py -u " + admin["name"])
-            print("Done!")
-            continue
-        # Delete HostiFi admins older than four hours 
-        if admin_created_at_utc < four_hours_ago_utc:
-            print("Deleting " + admin["name"] + "...")
-            os.system("python3 /root/support-tools/lib/unifi/py/delete-super-admin.py -u " + admin["name"])
-            print("Done!")
+if __name__ == "__main__":
+    db = pymongo.MongoClient("mongodb://127.0.0.1:27117").ace
+
+    cutoff_datetime = datetime.datetime.utcnow() - datetime.timedelta(hours=4)
+    cutoff_timestamp = cutoff_datetime.timestamp()
+    admins = db.admin.find(
+        filter={
+            "email": {"$regex": R"(?<!^dev)@hostifi\.com$"},
+            "$or": [
+                {"time_created": {"$exists": False}},
+                {"time_created": {"$lte": cutoff_timestamp}},
+            ],
+        },
+        projection=[],
+    )
+
+    for admin in admins:
+        db.privilege.delete_many({"admin_id": str(admin["_id"])})
+        db.admin.delete_one(admin)
