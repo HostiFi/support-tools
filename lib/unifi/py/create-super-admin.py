@@ -39,7 +39,7 @@ def create_super_admin(password):
         "last_site_name" : "default",
         "name" : args.username,
         "x_shadow" : sha512_crypt(password),
-        "time_created" : datetime.utcnow(),
+        "time_created" : int(datetime.utcnow().timestamp()),
     }).inserted_id
 
     logging.info("Promoting Admin to Super Admin...")
