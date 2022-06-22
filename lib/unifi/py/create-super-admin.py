@@ -1,4 +1,5 @@
 import crypt
+from datetime import datetime
 import os
 import string
 from random import SystemRandom
@@ -8,9 +9,9 @@ import random
 import logging
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-u','--username', help='UniFi username to create')
+parser.add_argument('-u','--username', help='UniFi username to create', required=True)
 parser.add_argument('-p', '--password', help='UniFi password to create')
-parser.add_argument('-e', '--email', help='UniFi email to create')
+parser.add_argument('-e', '--email', help='UniFi email to create', required=True)
 args = parser.parse_args()
 
 randchoice = SystemRandom().choice
@@ -30,36 +31,29 @@ def sha512_crypt(password, salt=None, rounds=None):
 def create_super_admin(password):
     logging.info("Creating UniFi Super Admin")
     logging.info("Connecting to MongoDB...")
-    site_ids = []
     client = pymongo.MongoClient("mongodb://127.0.0.1:27117/ace")
     mdb = client.ace
     logging.info("Inserting Admin...")
-    insert_admin = mdb.admin.insert_one({"email" : args.email, "last_site_name" : "default", "name" : args.username, "x_shadow" : sha512_crypt(password)})
-    db_dump = mdb.site.find()
-    admin_list = mdb.admin.find()
+    new_admin_id = insert_admin = mdb.admin.insert_one({
+        "email" : args.email,
+        "last_site_name" : "default",
+        "name" : args.username,
+        "x_shadow" : sha512_crypt(password),
+        "time_created" : datetime.utcnow(),
+    }).inserted_id
+
     logging.info("Promoting Admin to Super Admin...")
-    for admin in admin_list:
-        try:
-            if admin["email"] == args.email:
-                new_admin_id = str(admin["_id"])
-        except:
-            continue
-    for site in db_dump:
-        site_id = str(site["_id"])
-        site_ids.append(site_id)
-    for site_id in site_ids:
-        mdb.privilege.insert_one({"admin_id" : new_admin_id, "site_id" : site_id, "role" : "admin", "permissions" : [ ] })
+    mdb.privilege.insert_many(
+        {
+            "admin_id": str(new_admin_id),
+            "site_id": str(site_id["_id"]),
+            "role": "admin",
+            "permissions": [],
+        } for site_id in mdb.site.find()
+    )
     print("UniFi Super Admin created")
     print("Username: " + args.username)
     print("Password: " + password)
 
-if args.password:
-    if args.email is not None and args.password is not None and args.username is not None:
-        create_super_admin(args.password)
-    else:
-        print("Error: Missing arguments. --username, and --email are required. --password is optional.")
-else:
-    if args.email is not None and password is not None and args.username is not None:
-        create_super_admin(password)
-    else:
-        print("Error: Missing arguments. --username, and --email are required. --password is optional.")
+if __name__ == "__main__":
+    create_super_admin(args.password or password)
