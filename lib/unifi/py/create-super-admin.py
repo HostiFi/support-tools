@@ -17,15 +17,9 @@ args = parser.parse_args()
 randchoice = SystemRandom().choice
 password = ''.join(random.choice(string.ascii_letters) for i in range(8))
 
-def sha512_crypt(password, salt=None, rounds=None):
-    if salt is None:
-        salt = ''.join([randchoice(string.ascii_letters + string.digits)
-                        for _ in range(8)])
-
+def sha512_crypt(password):
+    salt = ''.join([randchoice(string.ascii_letters + string.digits) for _ in range(8)])
     prefix = '$6$'
-    if rounds is not None:
-        rounds = max(1000, min(999999999, rounds or 5000))
-        prefix += 'rounds={0}$'.format(rounds)
     return crypt.crypt(password, prefix + salt)
 
 def create_super_admin(password):
@@ -34,7 +28,7 @@ def create_super_admin(password):
     client = pymongo.MongoClient("mongodb://127.0.0.1:27117/ace")
     mdb = client.ace
     logging.info("Inserting Admin...")
-    new_admin_id = insert_admin = mdb.admin.insert_one({
+    new_admin_id = mdb.admin.insert_one({
         "email" : args.email,
         "last_site_name" : "default",
         "name" : args.username,
