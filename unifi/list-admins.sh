@@ -1,2 +1,2 @@
 #!/bin/bash
-mongo --port 27117 ace --eval "db.admin.find().forEach(printjson);"
+mongo --port 27117 ace --eval "db.admin.find({},{_id:false, name:true, email:true, ubic_name:true, ubic_uuid:true, requires_new_password:true, email_alert_enabled:true, push_alert_enabled:true, role_type:true}).forEach(printjson);"
