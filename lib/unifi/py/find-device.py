@@ -25,7 +25,10 @@ else:
     mac += args.mac[8] + args.mac[9] + ":"
     mac += args.mac[10] + args.mac[11]
 
-device = mdb.device.find_one({"mac": mac}, {"_id": 0, "ip": 1, "mac": 1, "model": 1, "model_in_lts": 1, "model_in_eol": 1, "version": 1, "adopted": 1, "inform_url": 1, "inform_ip": 1, "adoption_completed": 1, "site_id": 1})
+device = mdb.device.find_one({"mac": mac}, {"_id": 0, "ip": 1, "mac": 1, "model": 1, "model_in_lts": 1, "model_in_eol": 1, "version": 1, "adopted": 1, "inform_url": 1, "inform_ip": 1, "site_id": 1})
+if device is None:
+    print("Device not found")
+    exit()
 site_info = mdb.site.find_one({"_id": ObjectId(device["site_id"])}, {"_id": 0, "desc":1, "name":1})
 
 link = ""
@@ -44,7 +47,6 @@ print("EOL: " + str(device["model_in_eol"]))
 print("Version: " + str(device["version"]))
 print("Inform URL: " + device["inform_url"])
 print("Inform IP: " + device["inform_ip"])
-print("Adoption Completed: " + str(device["adoption_completed"]))
 print("Site Name: " + site_info["desc"])
 print("Site Code: " + site_info["name"])
 print("Link: " + link)
