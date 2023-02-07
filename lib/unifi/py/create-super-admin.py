@@ -39,25 +39,19 @@ def create_super_admin(password):
 
     if args.read_only == True:
         logging.info("Promoting Admin to Read-Only Super Admin...")
-        mdb.privilege.insert_many(
-            {
-                "admin_id": str(new_admin_id),
-                "site_id": str(site_id["_id"]),
-                "permissions": [],
-                "role": "readonly"
-            } for site_id in mdb.site.find()
-        )
-        
+        role = "readonly"
     else:
         logging.info("Promoting Admin to Super Admin...")
-        mdb.privilege.insert_many(
-            {
-                "admin_id": str(new_admin_id),
-                "site_id": str(site_id["_id"]),
-                "permissions": [],
-                "role": "admin"
-            } for site_id in mdb.site.find()
-        )
+        role = "admin"
+
+    mdb.privilege.insert_many(
+        {
+            "admin_id": str(new_admin_id),
+            "site_id": str(site_id["_id"]),
+            "role": role,
+            "permissions": [],
+        } for site_id in mdb.site.find()
+    )
 
     print("UniFi Super Admin created")
     print("Username: " + args.username)
