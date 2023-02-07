@@ -55,6 +55,7 @@ def create_super_admin(password):
                 "admin_id": str(new_admin_id),
                 "site_id": str(site_id["_id"]),
                 "permissions": [],
+                "role": "admin"
             } for site_id in mdb.site.find()
         )
 
