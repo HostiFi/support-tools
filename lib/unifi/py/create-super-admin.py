@@ -12,6 +12,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-u','--username', help='UniFi username to create', required=True)
 parser.add_argument('-p', '--password', help='UniFi password to create')
 parser.add_argument('-e', '--email', help='UniFi email to create', required=True)
+parser.add_argument('-r', '--read-only', action='store_true', help='If exists, a read-only Super Admin will be created')
 args = parser.parse_args()
 
 randchoice = SystemRandom().choice
@@ -36,15 +37,26 @@ def create_super_admin(password):
         "time_created" : int(datetime.utcnow().timestamp()),
     }).inserted_id
 
-    logging.info("Promoting Admin to Super Admin...")
-    mdb.privilege.insert_many(
-        {
-            "admin_id": str(new_admin_id),
-            "site_id": str(site_id["_id"]),
-            "role": "admin",
-            "permissions": [],
-        } for site_id in mdb.site.find()
-    )
+    site_filter = {"key": {"$ne": "super"}}
+    if args.read_only:
+        logging.info("Promoting Admin to Read-Only Admin...")
+        role = "readonly"
+    else:
+        logging.info("Promoting Admin to Super Admin...")
+        role = "admin"
+        site_filter = {}
+
+    site_ids = [site["_id"] for site in mdb.site.find(site_filter, [])]
+    if site_ids:
+        mdb.privilege.insert_many(
+            {
+                "admin_id": str(new_admin_id),
+                "site_id": str(site_id),
+                "role": role,
+                "permissions": [],
+            } for site_id in site_ids
+        )
+
     print("UniFi Super Admin created")
     print("Username: " + args.username)
     print("Password: " + password)
