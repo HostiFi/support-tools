@@ -5,15 +5,13 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-f','--file', help='db file name with path')
 args = parser.parse_args()
 
-docs = []
 encoded_docs = []
 current_collection = ""
 
-with open(args.file, 'rb') as f:
-    for doc in bson.decode_file_iter(f):
-        docs.append(doc)
+input_db = open(args.file, 'rb')
+output_db = open(args.file + "_new", 'wb')
 
-for doc in docs:
+for doc in bson.decode_file_iter(input_db):
     if 'collection' in doc:
         current_collection = doc['collection']
         encoded_doc = bson.encode(doc)
@@ -39,6 +37,9 @@ for doc in docs:
     encoded_doc = bson.encode(doc)
     encoded_docs.append(encoded_doc)
 
-with open(args.file + "_new", 'wb') as f:
-    for doc in encoded_docs:
-        f.write(doc)
+
+for doc in encoded_docs:
+    output_db.write(doc)
+
+input_db.close()
+output_db.close()
