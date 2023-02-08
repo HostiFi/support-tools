@@ -1,14 +1,19 @@
 #!/bin/bash
 
-function usage() {
-	echo "Usage: $0 input.unf output.unf" >&2
-	exit 2
-}
+declare in_file out_file
+if (( $# )); then
+  in_file="$1"; shift
+else
+  IFS= read -e -p "Input .unf file name: " in_file
+  in_file="${in_file% }"
+fi
 
-(( $# )) || usage
-declare -r in_file="$1"; shift
-(( $# )) || usage
-declare -r out_file="$1"; shift
+if (( $# )); then
+  out_file="$1"; shift
+else
+  IFS= read -e -p "Output .unf file name: " out_file
+  out_file="${out_file% }"
+fi
 
 declare -a mongo_jar=(/usr/lib/unifi/lib/mongo-java-driver-*.jar)
 
