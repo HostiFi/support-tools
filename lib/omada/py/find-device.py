@@ -31,7 +31,7 @@ if device is None:
     exit()
 
 device_site_id = ""
-if device["site_id"] == "Default"
+if device["site_id"] == "Default":
     device_site_id = "Default"
 else:
     device_site_id = ObjectId(device["site_id"])
