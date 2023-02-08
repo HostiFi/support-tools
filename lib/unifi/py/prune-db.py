@@ -30,7 +30,7 @@ for doc in docs:
     if current_collection == "guest":
         continue
     if current_collection == "user":
-        if 'used_fixedip' in doc or 'blocked' in doc or 'noted' in doc:
+        if 'use_fixedip' in doc or 'blocked' in doc or 'noted' in doc:
             encoded_doc = bson.encode(doc)
             encoded_docs.append(encoded_doc)
             continue
