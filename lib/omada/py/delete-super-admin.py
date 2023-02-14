@@ -13,8 +13,8 @@ args = parser.parse_args()
 if args.username is not None:
     logging.info("Connecting to MongoDB...")
     client = pymongo.MongoClient("mongodb://127.0.0.1:27217/omada")
-    omada_db_version = mdb.systemsetting.find_one()["start_up_info"]["db_version"]
     mdb = client.omada
+    omada_db_version = mdb.systemsetting.find_one()["start_up_info"]["db_version"]
     is_email = None
     if "@" in args.username:
         is_email = True
