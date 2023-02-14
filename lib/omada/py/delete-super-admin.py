@@ -11,6 +11,10 @@ parser.add_argument('-u','--username', help='Omada username of Super Admin to de
 args = parser.parse_args()
 
 if args.username is not None:
+    logging.info("Connecting to MongoDB...")
+    client = pymongo.MongoClient("mongodb://127.0.0.1:27217/omada")
+    omada_db_version = mdb.systemsetting.find_one()["start_up_info"]["db_version"]
+    mdb = client.omada
     is_email = None
     if "@" in args.username:
         is_email = True
@@ -19,9 +23,6 @@ if args.username is not None:
 
     if is_email == False:
         logging.info("Deleting Omada Super Admin by username")
-        logging.info("Connecting to MongoDB...")
-        client = pymongo.MongoClient("mongodb://127.0.0.1:27217/omada")
-        mdb = client.omada
         logging.info("Finding Admin ID...")
         logging.info("Deleting Admin...")
         mdb.user.delete_many({'name': args.username})
@@ -30,9 +31,7 @@ if args.username is not None:
 
     if is_email == True:
         logging.info("Deleting Omada Super Admin by email")
-        logging.info("Connecting to MongoDB...")
-        client = pymongo.MongoClient("mongodb://127.0.0.1:27217/omada")
-        mdb = client.omada
+        logging.info("Finding Admin ID...")
         user_list = mdb.user.find()
         user_name = ""
         for user in user_list:
@@ -45,6 +44,10 @@ if args.username is not None:
         mdb.user.delete_many({'name': user_name})
         print("Deleted the account for username: ")
         print(args.username)
+
+    if omada_db_version >= "5.8.0":
+        mdb.tenant.delete_many({'name': user_name})
+
 
 else:
     print("Error: Missing argument. --username is required.")
