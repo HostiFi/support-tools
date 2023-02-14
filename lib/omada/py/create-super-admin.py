@@ -44,7 +44,7 @@ def create_super_admin(password):
         "name" : args.username,
         "password" : sha256_crypt(password),
         "email" : base64.b64encode(args.email.encode('utf-8')).decode('ascii'),
-        "omadac_id" : omadac_id
+        "omadac_id" : omadac_id,
         "role_type" : 0,
         "verified" : True,
         "permissions" : [ "license", "site", "read", "adopt", "admin", "write", "manage" ],
