@@ -41,7 +41,7 @@ def create_super_admin(password):
         site_ids.append(str(site["_id"]))
     logging.info("Inserting User...")
     if omada_db_version < "5.8.0":
-        new_admin_id = mdb.user.insert_one({
+        new_user_id = mdb.user.insert_one({
             "name" : args.username,
             "password" : sha256_crypt(password),
             "email" : base64.b64encode(args.email.encode('utf-8')).decode('ascii'),
@@ -57,7 +57,17 @@ def create_super_admin(password):
             "devices_upgrade_notification" : False,
         }).inserted_id
     else:
-        new_admin_id = mdb.user.insert_one({
+        new_tenant_id = mdb.user.insert_one({
+            "name" : args.username,
+            "password" : sha256_crypt(password),
+            "email" : base64.b64encode(args.email.encode('utf-8')).decode('ascii'),
+            "omadacs" : [omadac_id],
+            "type": 0,
+            "created_time" : int(datetime.utcnow().timestamp())
+        }).inserted_id
+
+        new_user_id = mdb.user.insert_one({
+            "tenant_id": new_tenant_id,
             "name" : args.username,
             "password" : sha256_crypt(password),
             "email" : base64.b64encode(args.email.encode('utf-8')).decode('ascii'),
