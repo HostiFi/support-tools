@@ -76,10 +76,10 @@ def create_super_admin(password):
             "role_id" : "master_admin_id",
             "verified" : True,
             "site_ids" : site_ids,
+            "favorites": [],
             "alert" : True,
             "all_site" : True,
             "last_site" : site_ids[0],
-            "time_created" : int(datetime.utcnow().timestamp()),
             "devices_upgrade_notification" : False,
         }).inserted_id
 
