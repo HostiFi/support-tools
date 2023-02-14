@@ -34,8 +34,16 @@ def create_super_admin(password):
     mdb = client.omada
     site_ids = []
     logging.info("Gathering omadac_id...")
+    omadac_id = None
+    # Check in a few places to try to find omadac_id
     for configversion in mdb.configversion.find():
         omadac_id = configversion["omadac_id"]
+    if omadac_id == None:
+        for user in mdb.user.find():
+            omadac_id = user["omadac_id"]
+    if omadac_id == None:
+        for maintenanceomadacsetting in mdb.maintenanceomadacsetting.find():
+            omadac_id = maintenanceomadacsetting["omadac_id"]
     logging.info("Gathering side ids...")
     for site in mdb.site.find():
         site_ids.append(str(site["_id"]))
