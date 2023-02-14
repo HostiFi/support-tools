@@ -26,6 +26,7 @@ if args.username is not None:
         logging.info("Finding Admin ID...")
         logging.info("Deleting Admin...")
         mdb.user.delete_many({'name': args.username})
+        user_name = args.username
         print("Deleted the account for: ")
         print(args.username)
 
