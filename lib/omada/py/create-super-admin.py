@@ -69,7 +69,6 @@ def create_super_admin(password):
         new_user_id = mdb.user.insert_one({
             "tenant_id": str(new_tenant_id),
             "name" : args.username,
-            "email" : base64.b64encode(args.email.encode('utf-8')).decode('ascii'),
             "omadac_id" : omadac_id,
             "user_type": 0,
             "role_id" : "master_admin_id",
