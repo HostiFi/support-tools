@@ -60,7 +60,8 @@ def create_super_admin(password):
         new_tenant_id = mdb.tenant.insert_one({
             "name" : args.username,
             "password" : sha256_crypt(password),
-            "email" : "v2#PUDMGyQxRoROVyzuGXZmpBF+pBIGDsFCLMh/aixYYOk=",
+            # Not sure how to generate this hash or encoding yet, here's what it looks like for rchase@hostifi.com
+            # "email" : "v2#aQtoOqqc2KKktF6230tT5ox23OT3FU3SHXOX1WXV/mw=",
             "omadacs" : [omadac_id],
             "type": 0,
             "created_time" : datetime.fromtimestamp(datetime.utcnow().timestamp(), None),
@@ -69,7 +70,8 @@ def create_super_admin(password):
         new_user_id = mdb.user.insert_one({
             "tenant_id": str(new_tenant_id),
             "name" : args.username,
-            "email" : "v2#PUDMGyQxRoROVyzuGXZmpBF+pBIGDsFCLMh/aixYYOk=",
+            # Not sure how to generate this hash or encoding yet, here's what it looks like for rchase@hostifi.com
+            # "email" : "v2#aQtoOqqc2KKktF6230tT5ox23OT3FU3SHXOX1WXV/mw=",
             "omadac_id" : omadac_id,
             "user_type": 0,
             "role_id" : "master_admin_id",
