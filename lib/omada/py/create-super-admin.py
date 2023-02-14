@@ -63,7 +63,7 @@ def create_super_admin(password):
             "email" : base64.b64encode(args.email.encode('utf-8')).decode('ascii'),
             "omadacs" : [omadac_id],
             "type": 0,
-            "created_time" : int(datetime.utcnow().timestamp())
+            "created_time" : int(datetime.utcnow().isoformat())
         }).inserted_id
 
         new_user_id = mdb.user.insert_one({
