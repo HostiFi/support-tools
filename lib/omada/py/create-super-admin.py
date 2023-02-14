@@ -60,7 +60,7 @@ def create_super_admin(password):
         crypt_password = sha256_crypt(password)
         new_tenant_id = mdb.tenant.insert_one({
             "name" : args.username,
-            "password" : enc_password,
+            "password" : crypt_password,
             "email" : base64.b64encode(args.email.encode('utf-8')).decode('ascii'),
             "omadacs" : [omadac_id],
             "type": 0,
