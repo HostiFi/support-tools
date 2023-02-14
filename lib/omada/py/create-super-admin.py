@@ -57,7 +57,7 @@ def create_super_admin(password):
             "devices_upgrade_notification" : False,
         }).inserted_id
     else:
-        new_tenant_id = mdb.user.insert_one({
+        new_tenant_id = mdb.tenant.insert_one({
             "name" : args.username,
             "password" : sha256_crypt(password),
             "email" : base64.b64encode(args.email.encode('utf-8')).decode('ascii'),
