@@ -52,7 +52,6 @@ def create_super_admin(password):
             "site_ids" : site_ids,
             "alert" : True,
             "all_site" : True,
-            "last_site" : site_ids[0],
             "time_created" : int(datetime.utcnow().timestamp()),
             "devices_upgrade_notification" : False,
         }).inserted_id
@@ -80,7 +79,6 @@ def create_super_admin(password):
             "favorites": [],
             "alert" : True,
             "all_site" : True,
-            "last_site" : site_ids[0],
             "devices_upgrade_notification" : False,
         }).inserted_id
 
