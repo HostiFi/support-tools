@@ -1,73 +1,34 @@
-import crypt
-import os
-import string
-from random import SystemRandom
 import argparse
+import re
+import sys
+
 import pymongo
-import logging
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-u','--username', help='UniFi username of Super Admin to delete')
-args = parser.parse_args()
+parser.add_argument(
+    '-u','--username', required=True, help='UniFi username of Super Admin to delete'
+)
 
-if args.username is not None:
-    is_email = None
+if __name__ == "__main__":
+    args = parser.parse_args()
     if "@" in args.username:
-        is_email = True
+        query = {
+            "email": {"$regex": re.sub(r"[^A-Za-z0-9]", r"\\\g<0>", args.username)}
+        }
     else:
-        is_email = False
-    if is_email == False:
-        logging.info("Deleting UniFi Super Admin by username")
-        logging.info("Connecting to MongoDB...")
-        site_ids = []
-        client = pymongo.MongoClient("mongodb://127.0.0.1:27117/ace")
-        mdb = client.ace
-        logging.info("Finding Admin ID...")
-        db_dump = mdb.site.find()
-        admin_list = mdb.admin.find()
-        for admin in admin_list:
-            try:
-                if admin["name"] == args.username:
-                    admin_id = str(admin["_id"])
-            except:
-                continue
-        logging.info("Deleting Admin...")
-        mdb.admin.delete_many({'name': args.username})
-        for site in db_dump:
-            site_id = str(site["_id"])
-            site_ids.append(site_id)
-        logging.info("Deleting privileges from all sites...")
-        for site_id in site_ids:
-            mdb.privilege.delete_many({"admin_id" : admin_id, "site_id" : site_id})
-        print("Deleted the account for: ")
-        print(args.username)
+        query = {"name": args.username}
 
-    if is_email == True:
-        logging.info("Deleting UniFi Super Admin by email")
-        logging.info("Connecting to MongoDB...")
-        site_ids = []
-        client = pymongo.MongoClient("mongodb://127.0.0.1:27117/ace")
-        mdb = client.ace
-        logging.info("Finding Admin ID...")
-        db_dump = mdb.site.find()
-        admin_list = mdb.admin.find()
-        for admin in admin_list:
-            try:
-                if args.username in admin["email"]:
-                    admin_id = str(admin["_id"])
-                    admin_name = admin["name"]
-            except:
-                continue
-        logging.info("Deleting Admin...")
-        mdb.admin.delete_many({'name': admin_name})
-        for site in db_dump:
-            site_id = str(site["_id"])
-            site_ids.append(site_id)
-        logging.info("Removing privileges from all sites...")
-        for site_id in site_ids:
-            mdb.privilege.delete_many({"admin_id" : admin_id, "site_id" : site_id})
-        print("Deleted the account for username: ")
-        print(admin_name)
+    db = pymongo.MongoClient("mongodb://127.0.0.1:27117").ace
+    admin = db.admin.find_one_and_delete(query)
+    if admin is None:
+        print("Admin not found!")
+        sys.exit(1)
 
-else:
-    print("Error: Missing argument. --username is required.")
+    name = admin.get("name") or admin.get("ubic_name") or None
+    if name is not None:
+        print(f"Deleted admin: {name}")
+    else:
+        print("Deleted admin with unknown name")
+
+    print("Removing privileges from all sites...")
+    db.privilege.delete_many({"admin_id": str(admin["_id"])})
