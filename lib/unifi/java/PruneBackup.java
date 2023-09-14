@@ -7,6 +7,7 @@ import java.io.OutputStream;
 
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
@@ -103,7 +104,10 @@ public class PruneBackup {
         try (var in = openBackupInput(new FileInputStream(in_file));
              var out = openBackupOutput(new FileOutputStream(out_file))) {
             for (;;) {
-                var entry = in.getNextEntry();
+                ZipEntry entry = null;
+                try {
+                    entry = in.getNextEntry();
+                } catch (EOFException ex) {}
                 if (entry == null)
                     break;
 
