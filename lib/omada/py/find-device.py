@@ -3,12 +3,13 @@ import argparse
 import json
 from bson import ObjectId
 
+import omada
+
 parser = argparse.ArgumentParser()
 parser.add_argument('-m','--mac', help='UniFi device MAC address to delete')
 args = parser.parse_args()
 
-client = pymongo.MongoClient("mongodb://127.0.0.1:27217/omada")
-mdb = client.omada
+mdb = omada.db()
 mac = ""
 if len(args.mac) != 12 and len(args.mac) != 17:
     print("Invalid MAC address. Length must be either 12 or 17 characters.")

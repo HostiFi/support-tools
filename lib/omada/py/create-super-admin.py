@@ -10,6 +10,8 @@ import logging
 import base64
 import hashlib
 
+import omada
+
 parser = argparse.ArgumentParser()
 parser.add_argument('-u','--username', help='Omada username to create', required=True)
 parser.add_argument('-p', '--password', help='Omada password to create')
@@ -30,17 +32,15 @@ def sha256_crypt(password):
 def create_super_admin(password):
     logging.info("Creating Omada Super Admin")
     logging.info("Connecting to MongoDB...")
-    client = pymongo.MongoClient("mongodb://127.0.0.1:27217/omada")
-    mdb = client.omada
+    mdb = omada.db()
     site_ids = []
     logging.info("Gathering omadac_id...")
     omadac_id = mdb.omadac.find_one()["_id"]
-    omada_db_version = mdb.systemsetting.find_one()["start_up_info"]["db_version"]
     logging.info("Gathering side ids...")
     for site in mdb.site.find():
         site_ids.append(str(site["_id"]))
     logging.info("Inserting User...")
-    if omada_db_version < "5.8.0":
+    if omada.version() < (5, 8, 0):
         new_user_id = mdb.user.insert_one({
             "name" : args.username,
             "password" : sha256_crypt(password),

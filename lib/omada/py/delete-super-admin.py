@@ -6,15 +6,15 @@ import argparse
 import pymongo
 import logging
 
+import omada
+
 parser = argparse.ArgumentParser()
 parser.add_argument('-u','--username', help='Omada username of Super Admin to delete')
 args = parser.parse_args()
 
 if args.username is not None:
     logging.info("Connecting to MongoDB...")
-    client = pymongo.MongoClient("mongodb://127.0.0.1:27217/omada")
-    mdb = client.omada
-    omada_db_version = mdb.systemsetting.find_one()["start_up_info"]["db_version"]
+    mdb = omada.db()
     is_email = None
     if "@" in args.username:
         is_email = True
@@ -46,7 +46,7 @@ if args.username is not None:
         print("Deleted the account for username: ")
         print(args.username)
 
-    if omada_db_version >= "5.8.0":
+    if omada.version() >= (5, 8, 0):
         mdb.tenant.delete_many({'name': user_name})
 
 
