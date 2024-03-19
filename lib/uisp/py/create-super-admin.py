@@ -1,4 +1,4 @@
-import os
+import subprocess
 import bcrypt
 import uuid
 import argparse
@@ -24,11 +24,33 @@ else:
 	email = args.email
 random_uuid = str(uuid.uuid4())
 bcrypt_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-site_group_id = os.popen('docker exec -t unms-postgres psql -U unms -d unms -t -c "SELECT group_id FROM access_group_site LIMIT 1;"').read()
-astr = "docker exec -t unms-postgres psql -U unms -c \"INSERT INTO unms.user (id,username,email,password,role,site_group_id) VALUES ('" + random_uuid + "','" + args.username + "','" + email + "','" + bcrypt_hash.decode('utf-8') + "','superadmin', '" + str(site_group_id).strip() + "');\""
-astr = astr.replace('$', '\\$')
-print(astr)
-r = os.popen(astr).read()
+
+def psql(command, **variables):
+    return subprocess.run(
+        [
+            "docker", "exec", "--interactive", "unms-postgres",
+            "psql", "--username=unms", "--dbname=unms", "--no-align", "--tuples-only",
+            *("--variable={}={}".format(key, value) for key, value in variables.items()),
+        ],
+        input=command.encode("utf-8"),
+        capture_output=True,
+        check=True,
+    ).stdout.decode("utf-8").splitlines()
+
+site_group_id = psql("SELECT group_id FROM access_group_site LIMIT 1;")[0]
+psql(
+    "INSERT INTO unms.user(" +
+    "    id, username, email, password, role, site_group_id" +
+    ") VALUES (" +
+    "    :'random_uuid', :'username', :'email', :'password_hash', 'superadmin', :'site_group_id'" +
+    ")",
+    random_uuid=random_uuid,
+    username=args.username,
+    email=email,
+    password_hash=bcrypt_hash.decode("utf-8"),
+    site_group_id=site_group_id,
+)
+
 print("UISP Super Admin created")
 print("Username: " + args.username)
 print("Password: " + password)
