@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import pymongo
 import argparse
 import json
@@ -39,14 +41,14 @@ try:
     link = "https://" + hostname + ":8443/manage/" + site_info["name"] + "/devices"
 except:
     link = "Unknown"
-print("MAC: " + device["mac"])
-print("IP: " + device["ip"])
-print("Model: " + device["model"])
-print("LTS: " + str(device["model_in_lts"]))
-print("EOL: " + str(device["model_in_eol"]))
-print("Version: " + str(device["version"]))
-print("Inform URL: " + device["inform_url"])
-print("Inform IP: " + device["inform_ip"])
+print("MAC: " + device.get("mac"))
+print("IP: " + device.get("ip"))
+print("Model: " + device.get("model"))
+print("LTS: " + str(device.get("model_in_lts")))
+print("EOL: " + str(device.get("model_in_eol")))
+print("Version: " + str(device.get("version")))
+print("Inform URL: " + device.get("inform_url"))
+print("Inform IP: " + device.get("inform_ip"))
 print("Site Name: " + site_info["desc"])
 print("Site Code: " + site_info["name"])
 print("Link: " + link)
