@@ -1,0 +1,2 @@
+#!/bin/bash
+mongo ace --eval 'db.setting.updateOne({key: "super_cloudaccess"}, {$set: {enabled: false}, $unset: {device_id: "", x_certificate_arn: "", x_certificate_pem: "", x_private_key: "", device_auth: "", ubic_uuid: ""}});' --port 27117 --quiet
