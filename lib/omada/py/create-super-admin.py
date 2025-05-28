@@ -18,7 +18,7 @@ parser.add_argument('-p', '--password', help='Omada password to create')
 args = parser.parse_args()
 
 randchoice = SystemRandom().choice
-password = 'H137!'.join(random.choice(string.ascii_letters) for i in range(8))
+password = 'Hh7!'.join(random.choice(string.ascii_letters) for i in range(8))
 
 def sha256_crypt(password):
     iterations = 500000
