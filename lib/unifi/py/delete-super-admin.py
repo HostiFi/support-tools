@@ -5,6 +5,7 @@ import sys
 import pymongo
 
 parser = argparse.ArgumentParser()
+parser.add_argument("--owner", help="no-op")
 parser.add_argument(
     '-u','--username', required=True, help='UniFi username of Super Admin to delete'
 )
