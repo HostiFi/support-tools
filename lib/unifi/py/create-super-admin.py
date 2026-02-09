@@ -9,7 +9,7 @@ import random
 import logging
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--owner", help="no-op")
+parser.add_argument("--owner", action="store_true", help="no-op")
 parser.add_argument('-u','--username', help='UniFi username to create', required=True)
 parser.add_argument('-p', '--password', help='UniFi password to create')
 parser.add_argument('-e', '--email', help='UniFi email to create', required=True)
